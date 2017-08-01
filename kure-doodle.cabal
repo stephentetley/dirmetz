@@ -1,0 +1,43 @@
+name:             kure-doodle
+version:          0.1.0
+license:          BSD3
+license-file:     LICENSE
+copyright:        Stephen Tetley <stephen.tetley@gmail.com>
+maintainer:       Stephen Tetley <stephen.tetley@gmail.com>
+homepage:         https://github.com/stephentetley/kure-doodle
+category:         Todo
+synopsis:         Experiments with Kure (The Kansas University Rewrite Engine)
+description:
+  .
+  Experiments with Kure (The Kansas University Rewrite Engine)
+  .
+
+build-type:         Simple
+stability:          half baked
+cabal-version:      >= 1.2
+
+extra-source-files:
+  demo/Demo01.hs
+
+
+library
+  hs-source-dirs:     src
+  build-depends:      base,
+                      kure
+  exposed-modules:
+    
+
+    
+
+  other-modules:
+     
+  extensions:
+    
+
+  ghc-options:
+  
+  includes: 
+  
+
+  
+  
