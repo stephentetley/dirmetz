@@ -1,4 +1,7 @@
 {-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE InstanceSigs               #-}
+{-# LANGUAGE LambdaCase                 #-}
 {-# OPTIONS -Wall #-}
 
 
@@ -23,7 +26,18 @@ instance Injection FileObj U where
   project (UFO fo) = Just fo
 
 
-instance Walker U where
-  allR r = \(UFO fo) -> UFO <$> allFileObj fo
+
+instance Walker cx U where
+  allR :: MonadCatch m => Rewrite c m U -> Rewrite c m U
+  allR r = prefixFailMsg "allR failed: " $
+           rewrite $ \cx -> \(UFO fo) -> inject <$> applyR allRfileObj cx fo
     where
-      allFileObj (File s) = File <$> pure s
+      allRfileObj :: Monad m => Rewrite c m FileObj
+      allRfileObj = readerT $ \case 
+                      File {} -> idR
+                      Folder {} -> undefined
+
+--      allFileObj cx (File s) = File <$> pure s
+--      allFileObj cx (Folder s fs) = undefined -- let fn = extractR r in Folder <$> pure s <*> mapM (fn cx) fs
+
+foldersAllR :: Monad m => Rewrite c m [FileObj] -> Rewrite c m [FileObj] -> Rewrite c m [FileObj]
