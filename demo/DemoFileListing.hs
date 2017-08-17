@@ -11,6 +11,9 @@ module DemoFileListing where
 
 import Language.KURE
 
+import Control.Monad
+import System.Directory
+import System.FilePath
 
 type Name = String
 
@@ -58,3 +61,25 @@ instance Walker cx U where
       allRfileObj = readerT $ \case 
                       File {} -> idR
                       Folder {} -> folderAllR (extractR r)
+
+
+--------------------------------------------------------------------------------
+-- Populate 
+
+populate :: FilePath -> IO FileObj
+populate = foldersR
+  where
+    listDirectoryLong :: FilePath -> IO [FilePath]
+    listDirectoryLong path = map (path </>) <$> listDirectory path
+
+    foldersR path = do { kids <- filterM doesDirectoryExist =<< listDirectoryLong path 
+                       ; kids' <- mapM foldersR kids
+                       ; files <- files1 path
+                       ; return $ Folder path (kids' ++ files) }
+                       
+    files1 path = do { xs <- filterM doesFileExist =<< listDirectoryLong path 
+                     ; return $ map (File . takeFileName) xs }
+
+
+demo01 :: IO ()
+demo01 = getCurrentDirectory >>= populate >>= print
