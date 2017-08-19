@@ -25,6 +25,7 @@ library
   build-depends:      base,
                       directory,
                       filepath,
+                      pretty,
                       kure
   exposed-modules:
     

@@ -9,11 +9,15 @@ module DemoFileListing where
 
 
 
-import Language.KURE
+import Language.KURE                    -- package: kure
+
+import Text.PrettyPrint                 -- package: pretty
 
 import Control.Monad
 import System.Directory
 import System.FilePath
+
+
 
 type Name = String
 
@@ -24,6 +28,10 @@ data FileObj = File Name
 
 -- Note the Lam example distributed with KURE implies we don't 
 -- need a universe as we have a single type
+-- Also if were read Context as the analogue to inherited 
+-- attributes in attribute grammars, (parent) path would be an 
+-- obvious context.
+
 
 data U = UFO FileObj
 
@@ -54,7 +62,7 @@ folderAllR r = folderT r Folder
 
 
 instance Walker cx U where
-  allR :: MonadCatch m => Rewrite c m U -> Rewrite c m U
+  allR :: MonadCatch m => Rewrite cx m U -> Rewrite cx m U
   allR r = prefixFailMsg "allR failed: " $
            rewrite $ \cx -> \(UFO fo) -> inject <$> applyR allRfileObj cx fo
     where
@@ -81,5 +89,56 @@ populate = foldersR
                      ; return $ map (File . takeFileName) xs }
 
 
+--------------------------------------------------------------------------------
+-- Pretty print
+
+type Context = ()
+
+type RewriteE a     = Rewrite Context KureM a
+type TransformE a b = Transform Context KureM a b
+
+
+-- allT is onelayer traversal
+{-
+prettyPrint :: FileObj -> Doc
+prettyPrint fo = top $+$ rest
+  where
+    top = vsep $ applyT (allT pretty1) fo
+    rest = text "..."
+-}
+
+prettyPrint :: FileObj -> Either String Doc
+prettyPrint = fmap vsep . runKureM Right Left . applyT prettyDir () . UFO
+
+
+-- Ideally KURE would have a one-level version of collectT 
+prettyDir :: TransformE U [Doc]
+prettyDir = withPatFailMsg "addLitR failed" $
+            do (UFO (Folder {})) <- idR
+               collectPruneT prettyG1
+
+
+
+vsep :: [Doc] -> Doc
+vsep []         = empty
+vsep [d]        = d
+vsep (d:ds)     = d $+$ vsep ds
+
+prettyG1 :: TransformE U Doc
+prettyG1 = promoteT pretty1
+
+-- No descending into terms.
+pretty1 :: TransformE FileObj Doc
+pretty1 = transform $ \_ -> \case
+    File s -> return $ nest 6 (text s)
+    Folder s _ -> return $ text "<DIR>" <+> text s
+
+
+--------------------------------------------------------------------------------
+-- Demos
+
 demo01 :: IO ()
 demo01 = getCurrentDirectory >>= populate >>= print
+
+demo02 :: IO ()
+demo02 = getCurrentDirectory >>= populate >>= \fo -> print (prettyPrint fo) 
