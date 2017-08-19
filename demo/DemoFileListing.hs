@@ -1,7 +1,9 @@
 {-# LANGUAGE MultiParamTypeClasses      #-}
 {-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE InstanceSigs               #-}
 {-# LANGUAGE LambdaCase                 #-}
+{-# LANGUAGE UndecidableInstances       #-}
 {-# OPTIONS -Wall #-}
 
 
@@ -32,6 +34,18 @@ data FileObj = File Name
 -- attributes in attribute grammars, (parent) path would be an 
 -- obvious context.
 
+newtype Context = Context { getContext :: FilePath }
+
+zeroContext :: Context
+zeroContext = Context ""
+
+instance ExtendPath Context FilePath where
+  (@@) (Context p1) p2 = Context $ p1 </> p2
+
+-- a zero would be (Context "")
+
+
+-- type Context = ()
 
 
 
@@ -43,20 +57,20 @@ fileT f = contextfreeT $ \case
 
 -- congruence combinator
 -- Note Path is not propagated (this is a limitation that could be improved)
-folderT :: Monad m 
+folderT :: (ExtendPath c FilePath, Monad m) 
         => Transform c m FileObj a -> (Name -> [a] -> b) -> Transform c m FileObj b
 folderT t f = transform $ \c -> \case
-    Folder s ks -> f s <$> mapM (\fo -> applyT t c fo) ks
+    Folder s ks -> let c1 = c @@ s in f s <$> mapM (\fo -> applyT t c1 fo) ks
     _ -> fail "not a Folder"
                              
 
-folderAllR :: Monad m => Rewrite c m FileObj -> Rewrite c m FileObj
+folderAllR :: (ExtendPath c FilePath, Monad m) => Rewrite c m FileObj -> Rewrite c m FileObj
 folderAllR r = folderT r Folder
 
 
 
-instance Walker cx FileObj where
-  allR :: MonadCatch m => Rewrite cx m FileObj -> Rewrite cx m FileObj
+instance (ExtendPath c FilePath) => Walker c FileObj where
+  allR :: MonadCatch m => Rewrite c m FileObj -> Rewrite c m FileObj
   allR r = prefixFailMsg "allR failed: " $
            rewrite $ \cx fo -> inject <$> applyR allRfileObj cx fo
     where
@@ -77,7 +91,7 @@ populate = foldersR
     foldersR path = do { kids <- filterM doesDirectoryExist =<< listDirectoryLong path 
                        ; kids' <- mapM foldersR kids
                        ; files <- files1 path
-                       ; return $ Folder path (kids' ++ files) }
+                       ; return $ Folder (takeFileName path) (kids' ++ files) }
                        
     files1 path = do { xs <- filterM doesFileExist =<< listDirectoryLong path 
                      ; return $ map (File . takeFileName) xs }
@@ -86,7 +100,6 @@ populate = foldersR
 --------------------------------------------------------------------------------
 -- Pretty print
 
-type Context = ()
 
 type RewriteE a     = Rewrite Context KureM a
 type TransformE a b = Transform Context KureM a b
@@ -102,18 +115,22 @@ prettyPrint fo = top $+$ rest
 -}
 
 prettyPrint :: FileObj -> Either String Doc
-prettyPrint = fmap getLineDoc . runKureM Right Left . applyT prettyDir ()
+prettyPrint = fmap getLineDoc . runKureM Right Left . applyT prettyDir zeroContext
 
+newtype LineDoc = LineDoc { getLineDoc :: Doc }
+
+blankLine :: LineDoc 
+blankLine = LineDoc $ text ""
 
 -- Ideally KURE would have a one-level version of collectT 
 prettyDir :: TransformE FileObj LineDoc
 prettyDir = withPatFailMsg "addLitR failed" $
-            do Folder {} <- idR
+            do (c, Folder {}) <- exposeT
+               let d0 = LineDoc $ text (getContext c) <> char ':'
                d1 <- allT pretty1
                ds <- allT (mtryM prettyDir)
-               return $ d1 `mappend` ds
+               return $ d0 `mappend` d1 `mappend` ds `mappend` blankLine
 
-newtype LineDoc = LineDoc { getLineDoc :: Doc }
 
 instance Monoid LineDoc where
   mempty = LineDoc  empty
@@ -140,4 +157,6 @@ demo01 :: IO ()
 demo01 = getCurrentDirectory >>= populate >>= print
 
 demo02 :: IO ()
-demo02 = getCurrentDirectory >>= populate >>= \fo -> print (prettyPrint fo) 
+demo02 = getCurrentDirectory >>= populate >>= \fo -> case prettyPrint fo of
+    Right ans -> print ans
+    Left err -> error err
