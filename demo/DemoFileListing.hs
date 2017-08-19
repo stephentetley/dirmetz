@@ -33,11 +33,6 @@ data FileObj = File Name
 -- obvious context.
 
 
-data U = UFO FileObj
-
-instance Injection FileObj U where
-  inject = UFO
-  project (UFO fo) = Just fo
 
 
 -- Congruence combinator                     
@@ -46,9 +41,8 @@ fileT f = contextfreeT $ \case
     File s -> return (f s)
     _     -> fail "not a File"
 
-
 -- congruence combinator
--- Note Path is not propagated (this is an error)
+-- Note Path is not propagated (this is a limitation that could be improved)
 folderT :: Monad m 
         => Transform c m FileObj a -> (Name -> [a] -> b) -> Transform c m FileObj b
 folderT t f = transform $ \c -> \case
@@ -61,10 +55,10 @@ folderAllR r = folderT r Folder
 
 
 
-instance Walker cx U where
-  allR :: MonadCatch m => Rewrite cx m U -> Rewrite cx m U
+instance Walker cx FileObj where
+  allR :: MonadCatch m => Rewrite cx m FileObj -> Rewrite cx m FileObj
   allR r = prefixFailMsg "allR failed: " $
-           rewrite $ \cx -> \(UFO fo) -> inject <$> applyR allRfileObj cx fo
+           rewrite $ \cx fo -> inject <$> applyR allRfileObj cx fo
     where
       allRfileObj = readerT $ \case 
                       File {} -> idR
@@ -108,14 +102,14 @@ prettyPrint fo = top $+$ rest
 -}
 
 prettyPrint :: FileObj -> Either String Doc
-prettyPrint = fmap vsep . runKureM Right Left . applyT prettyDir () . UFO
+prettyPrint = fmap vsep . runKureM Right Left . applyT prettyDir ()
 
 
 -- Ideally KURE would have a one-level version of collectT 
-prettyDir :: TransformE U [Doc]
+prettyDir :: TransformE FileObj [Doc]
 prettyDir = withPatFailMsg "addLitR failed" $
-            do (UFO (Folder {})) <- idR
-               collectPruneT prettyG1
+            do Folder {} <- idR
+               collectPruneT pretty1
 
 
 
@@ -124,8 +118,6 @@ vsep []         = empty
 vsep [d]        = d
 vsep (d:ds)     = d $+$ vsep ds
 
-prettyG1 :: TransformE U Doc
-prettyG1 = promoteT pretty1
 
 -- No descending into terms.
 pretty1 :: TransformE FileObj Doc
