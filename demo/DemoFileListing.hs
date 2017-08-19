@@ -102,15 +102,22 @@ prettyPrint fo = top $+$ rest
 -}
 
 prettyPrint :: FileObj -> Either String Doc
-prettyPrint = fmap vsep . runKureM Right Left . applyT prettyDir ()
+prettyPrint = fmap getLineDoc . runKureM Right Left . applyT prettyDir ()
 
 
 -- Ideally KURE would have a one-level version of collectT 
-prettyDir :: TransformE FileObj [Doc]
+prettyDir :: TransformE FileObj LineDoc
 prettyDir = withPatFailMsg "addLitR failed" $
             do Folder {} <- idR
-               collectPruneT pretty1
+               d1 <- allT pretty1
+               ds <- allT (mtryM prettyDir)
+               return $ d1 `mappend` ds
 
+newtype LineDoc = LineDoc { getLineDoc :: Doc }
+
+instance Monoid LineDoc where
+  mempty = LineDoc  empty
+  a `mappend` b = LineDoc $ getLineDoc a $+$ getLineDoc b
 
 
 vsep :: [Doc] -> Doc
@@ -120,10 +127,10 @@ vsep (d:ds)     = d $+$ vsep ds
 
 
 -- No descending into terms.
-pretty1 :: TransformE FileObj Doc
+pretty1 :: TransformE FileObj LineDoc
 pretty1 = transform $ \_ -> \case
-    File s -> return $ nest 6 (text s)
-    Folder s _ -> return $ text "<DIR>" <+> text s
+    File s -> return $ LineDoc $ nest 6 (text s)
+    Folder s _ -> return $ LineDoc $ text "<DIR>" <+> text s
 
 
 --------------------------------------------------------------------------------
