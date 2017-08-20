@@ -28,7 +28,7 @@ library
                       pretty,
                       kure
   exposed-modules:
-    
+    Doodle.FileSys.Base                
 
     
 
