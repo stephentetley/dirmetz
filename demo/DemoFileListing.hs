@@ -22,10 +22,13 @@ import System.FilePath
 
 
 type Name = String
+type Size = Integer
 
-data FileObj = File Name
+data FileObj = File   Name Size
              | Folder Name [FileObj]
   deriving (Show)
+
+-- Other possible file stats are modification time, access time, premissions
 
 
 -- Note the Lam example distributed with KURE implies we don't 
@@ -42,18 +45,14 @@ zeroContext = Context ""
 instance ExtendPath Context FilePath where
   (@@) (Context p1) p2 = Context $ p1 </> p2
 
--- a zero would be (Context "")
-
-
--- type Context = ()
 
 
 
 -- Congruence combinator                     
-fileT :: Monad m => (Name -> b) -> Transform c m FileObj b
+fileT :: Monad m => (Name -> Size -> b) -> Transform c m FileObj b
 fileT f = contextfreeT $ \case
-    File s -> return (f s)
-    _     -> fail "not a File"
+    File s sz -> return (f s sz)
+    _         -> fail "not a File"
 
 -- congruence combinator
 -- Note Path is not propagated (this is a limitation that could be improved)
@@ -94,7 +93,7 @@ populate = foldersR
                        ; return $ Folder (takeFileName path) (kids' ++ files) }
                        
     files1 path = do { xs <- filterM doesFileExist =<< listDirectoryLong path 
-                     ; return $ map (File . takeFileName) xs }
+                     ; mapM (\x -> do {sz <- getFileSize x; return $ File (takeFileName x) sz }) xs }
 
 
 --------------------------------------------------------------------------------
@@ -105,14 +104,6 @@ type RewriteE a     = Rewrite Context KureM a
 type TransformE a b = Transform Context KureM a b
 
 
--- allT is onelayer traversal
-{-
-prettyPrint :: FileObj -> Doc
-prettyPrint fo = top $+$ rest
-  where
-    top = vsep $ applyT (allT pretty1) fo
-    rest = text "..."
--}
 
 prettyPrint :: FileObj -> Either String Doc
 prettyPrint = fmap getLineDoc . runKureM Right Left . applyT prettyDir zeroContext
@@ -125,8 +116,8 @@ blankLine = LineDoc $ text ""
 -- Ideally KURE would have a one-level version of collectT 
 prettyDir :: TransformE FileObj LineDoc
 prettyDir = withPatFailMsg "addLitR failed" $
-            do (c, Folder {}) <- exposeT
-               let d0 = LineDoc $ text (getContext c) <> char ':'
+            do (c, Folder s _) <- exposeT
+               let d0 = LineDoc $ text (getContext c </> s) <> char ':'
                d1 <- allT pretty1
                ds <- allT (mtryM prettyDir)
                return $ d0 `mappend` d1 `mappend` ds `mappend` blankLine
@@ -146,7 +137,7 @@ vsep (d:ds)     = d $+$ vsep ds
 -- No descending into terms.
 pretty1 :: TransformE FileObj LineDoc
 pretty1 = transform $ \_ -> \case
-    File s -> return $ LineDoc $ nest 6 (text s)
+    File s _ -> return $ LineDoc $ nest 6 (text s)
     Folder s _ -> return $ LineDoc $ text "<DIR>" <+> text s
 
 
