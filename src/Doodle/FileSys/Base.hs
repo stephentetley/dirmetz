@@ -174,3 +174,32 @@ largestFile1 :: TransformE FileObj Integer
 largestFile1 = fmap (fromIntegral . getMax) $ crushtdT $ 
     do File _ sz <- idR
        return $ maxi sz
+
+
+-- labelling Metrics seems like a good idea
+
+data Labelled a = Labelled !String !a 
+  deriving (Eq,Ord,Show,Read)
+
+
+
+
+newtype MaxInteger = MaxInteger { getMaxInteger :: Labelled Integer }
+  deriving (Eq,Ord,Show,Read)
+
+instance Monoid MaxInteger where
+  mempty = MaxInteger $ Labelled "" 0 
+  a@(MaxInteger (Labelled _ i1)) `mappend` b@(MaxInteger (Labelled _ i2)) = if i1>= i2 then a else b
+
+
+largestFileNamed :: FileObj -> Either String (String,Integer)
+largestFileNamed = runKureM Right Left . applyT largestFileNamed1 zeroContext
+
+
+-- max monoid
+largestFileNamed1 :: TransformE FileObj (String,Integer)
+largestFileNamed1 = fmap get $ crushtdT $ 
+    do File s sz <- idR
+       return $ MaxInteger $ Labelled s sz
+  where
+    get (MaxInteger (Labelled s i)) = (s,i)
