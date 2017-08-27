@@ -28,3 +28,10 @@ demo02 = getCurrentDirectory >>= populate >>= \fo -> case prettyPrint fo of
     Right ans -> print ans
     Left err -> error err
 
+
+
+demo03 :: IO ()
+demo03 = getCurrentDirectory >>= populate >>= \fo -> case largestFile fo of
+    Right ans -> print ans
+    Left err -> error err
+

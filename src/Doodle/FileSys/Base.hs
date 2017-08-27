@@ -30,6 +30,8 @@ import Language.KURE                    -- package: kure
 import Text.PrettyPrint                 -- package: pretty
 
 import Control.Monad
+import Data.Int
+import Data.Semigroup hiding ( (<>) )
 import System.Directory
 import System.FilePath
 
@@ -155,3 +157,20 @@ pretty1 = transform $ \_ -> \case
     Folder s _ -> return $ LineDoc $ text "<DIR>" <+> text s
 
 
+--------------------------------------------------------------------------------
+-- Towards metrics
+
+type Maxi = Max Int64
+
+maxi :: Integral a => a -> Maxi
+maxi = Max . fromIntegral
+
+largestFile :: FileObj -> Either String Integer
+largestFile = runKureM Right Left . applyT largestFile1 zeroContext
+
+
+-- max monoid
+largestFile1 :: TransformE FileObj Integer
+largestFile1 = fmap (fromIntegral . getMax) $ crushtdT $ 
+    do File _ sz <- idR
+       return $ maxi sz
