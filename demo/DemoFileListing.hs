@@ -40,3 +40,8 @@ demo03a = getCurrentDirectory >>= populate >>= \fo -> case largestFileNamed fo o
     Right ans -> print ans
     Left err -> error err
 
+demo04 :: IO ()
+demo04 = getCurrentDirectory >>= populate >>= \fo -> case (countFiles fo, countFolders fo) of
+    (Right i1, Right i2) -> print $ (i1,i2)
+    (Left err, _) -> error err
+    (_, Left err) -> error err

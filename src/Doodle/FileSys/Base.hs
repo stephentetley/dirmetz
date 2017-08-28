@@ -184,6 +184,35 @@ largestFileNamed = runKureM Right Left . applyT largestFileNamed1 zeroContext
 largestFileNamed1 :: TransformE FileObj (String,Integer)
 largestFileNamed1 = fmap get $ crushtdT $ 
     do File s sz <- idR
-       return $ MaxInteger $ Labelled s sz
+       return $ LargestInteger $ Labelled s sz
   where
-    get (MaxInteger (Labelled s i)) = (s,i)
+    get (LargestInteger (Labelled s i)) = (s,i)
+
+
+-- Counting 
+
+
+type Sumi = Sum Integer
+
+
+
+countFiles :: FileObj -> Either String Integer
+countFiles = runKureM Right Left . applyT countFiles1 zeroContext
+
+
+-- sum monoid
+countFiles1 :: TransformE FileObj Integer
+countFiles1 = fmap getSum $ crushtdT $ 
+    do File {} <- idR
+       return 1
+
+countFolders :: FileObj -> Either String Integer
+countFolders = runKureM Right Left . applyT countFolders1 zeroContext
+
+
+-- Note - this counts the root folder...
+-- sum monoid
+countFolders1 :: TransformE FileObj Integer
+countFolders1 = fmap getSum $ crushtdT $ 
+    do Folder {} <- idR
+       return 1
