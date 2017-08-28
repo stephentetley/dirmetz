@@ -23,7 +23,7 @@
 
 module Doodle.FileSys.Base where
 
-
+import Doodle.Metrics
 
 import Language.KURE                    -- package: kure
 
@@ -156,7 +156,6 @@ pretty1 = transform $ \_ -> \case
     File s _ -> return $ LineDoc $ nest 6 (text s)
     Folder s _ -> return $ LineDoc $ text "<DIR>" <+> text s
 
-
 --------------------------------------------------------------------------------
 -- Towards metrics
 
@@ -175,21 +174,6 @@ largestFile1 = fmap (fromIntegral . getMax) $ crushtdT $
     do File _ sz <- idR
        return $ maxi sz
 
-
--- labelling Metrics seems like a good idea
-
-data Labelled a = Labelled !String !a 
-  deriving (Eq,Ord,Show,Read)
-
-
-
-
-newtype MaxInteger = MaxInteger { getMaxInteger :: Labelled Integer }
-  deriving (Eq,Ord,Show,Read)
-
-instance Monoid MaxInteger where
-  mempty = MaxInteger $ Labelled "" 0 
-  a@(MaxInteger (Labelled _ i1)) `mappend` b@(MaxInteger (Labelled _ i2)) = if i1>= i2 then a else b
 
 
 largestFileNamed :: FileObj -> Either String (String,Integer)
