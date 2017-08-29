@@ -175,6 +175,7 @@ largestFile1 = fmap (fromIntegral . getMax) $ crushtdT $
        return $ maxi sz
 
 
+-- Labelling means we can identify the largest node alongside its size.
 
 largestFileNamed :: FileObj -> Either String (String,Integer)
 largestFileNamed = runKureM Right Left . applyT largestFileNamed1 zeroContext
@@ -190,9 +191,9 @@ largestFileNamed1 = fmap get $ crushtdT $
 
 
 -- Counting 
-
-
-type Sumi = Sum Integer
+-- Counting doesn't seem to need labelling unless we label the 
+-- metric itself, although that seems unnecessary at the element 
+-- level as the metric name never changes.
 
 
 
@@ -211,8 +212,24 @@ countFolders = runKureM Right Left . applyT countFolders1 zeroContext
 
 
 -- Note - this counts the root folder...
--- sum monoid
 countFolders1 :: TransformE FileObj Integer
 countFolders1 = fmap getSum $ crushtdT $ 
     do Folder {} <- idR
        return 1
+
+
+-- deepest 
+-- deepest is not a straight-forward topdown traversal
+
+
+maxDepth :: FileObj -> Either String Integer
+maxDepth = runKureM Right Left . applyT maxDepth1 zeroContext
+
+maxDepth1 :: TransformE FileObj Integer
+maxDepth1 = fmap (fromIntegral . getMax) $ allT $ folder_depth <+ file_depth 
+  where
+    folder_depth = do Folder {} <- idR
+                      mx <- allT $ folder_depth <+ file_depth
+                      return $ 1 + mx
+    file_depth = do File {} <- idR 
+                    return $ maxi (1::Integer)

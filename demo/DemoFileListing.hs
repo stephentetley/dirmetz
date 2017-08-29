@@ -45,3 +45,9 @@ demo04 = getCurrentDirectory >>= populate >>= \fo -> case (countFiles fo, countF
     (Right i1, Right i2) -> print $ (i1,i2)
     (Left err, _) -> error err
     (_, Left err) -> error err
+
+
+demo05 :: IO ()
+demo05 = getCurrentDirectory >>= populate >>= \fo -> case maxDepth fo of
+    Right ans -> print ans
+    Left err -> error err
