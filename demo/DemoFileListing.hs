@@ -51,3 +51,8 @@ demo05 :: IO ()
 demo05 = getCurrentDirectory >>= populate >>= \fo -> case maxDepth fo of
     Right ans -> print ans
     Left err -> error err
+
+demo06 :: IO ()
+demo06 = getCurrentDirectory >>= populate >>= \fo -> case subsystems fo of
+    Right ans -> print ans
+    Left err -> error err

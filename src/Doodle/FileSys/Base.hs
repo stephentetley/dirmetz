@@ -31,6 +31,7 @@ import Text.PrettyPrint                 -- package: pretty
 
 import Control.Monad
 import Data.Int
+import qualified Data.Map as Map
 import Data.Semigroup hiding ( (<>) )
 import System.Directory
 import System.FilePath
@@ -233,3 +234,19 @@ maxDepth1 = fmap (fromIntegral . getMax) $ allT $ folder_depth <+ file_depth
                       return $ 1 + mx
     file_depth = do File {} <- idR 
                     return $ maxi (1::Integer)
+
+
+-- Histogram
+
+type Histo = Map.Map String Integer
+
+subsystems :: FileObj -> Either String Histo
+subsystems = runKureM Right Left . applyT subsystems1 zeroContext
+
+subsystems1 :: TransformE FileObj Histo
+subsystems1 = fmap Map.fromList $ allT $ tryM [] go_folder
+  where
+    go_folder = do Folder s _ <- idR
+                   i <- countFiles1
+                   j <- countFolders1   -- counts parent folder (not really what we want)
+                   return [(s,i+j)]
