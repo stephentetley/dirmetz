@@ -212,11 +212,14 @@ countFolders :: FileObj -> Either String Integer
 countFolders = runKureM Right Left . applyT countFolders1 zeroContext
 
 
--- Note - this counts the root folder...
+-- Note - don't count the root folder (so don't use crushtdT)
 countFolders1 :: TransformE FileObj Integer
-countFolders1 = fmap getSum $ crushtdT $ 
-    do Folder {} <- idR
-       return 1
+countFolders1 = fmap getSum go_kids
+  where
+    go_kids   = allT $ tryM 0 go_folder
+    go_folder = do Folder {} <- idR
+                   i <- go_kids
+                   return $ 1 `mappend` i
 
 
 -- deepest 
@@ -248,5 +251,5 @@ subsystems1 = fmap Map.fromList $ allT $ tryM [] go_folder
   where
     go_folder = do Folder s _ <- idR
                    i <- countFiles1
-                   j <- countFolders1   -- counts parent folder (not really what we want)
+                   j <- countFolders1
                    return [(s,i+j)]
