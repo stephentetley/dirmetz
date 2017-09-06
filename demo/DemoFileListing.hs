@@ -13,7 +13,7 @@ import Doodle.FileSys.Base
 
 -- import Language.KURE                    -- package: kure
 
-
+import Data.Time
 import System.Directory
 
 
@@ -56,3 +56,19 @@ demo06 :: IO ()
 demo06 = getCurrentDirectory >>= populate >>= \fo -> case subsystems fo of
     Right ans -> print ans
     Left err -> error err
+
+
+-- getModificationTime returns UTCTime 
+type Timestamp = UTCTime
+
+temp01 :: IO Timestamp
+temp01 = getCurrentTime
+
+temp02 :: UTCTime
+temp02 = UTCTime { utctDay = day, utctDayTime = daytime }
+  where
+    day = fromGregorian 2017 09 05
+    daytime = hoursMinutesSecondsToDiffTime 12 30 00
+
+hoursMinutesSecondsToDiffTime :: Int -> Int -> Integer -> DiffTime
+hoursMinutesSecondsToDiffTime h m s = secondsToDiffTime $ s + 60 * (fromIntegral m) + 3600 * (fromIntegral h)

@@ -29,6 +29,8 @@ import Language.KURE                    -- package: kure
 
 import Text.PrettyPrint                 -- package: pretty
 
+import Data.Time                        -- package: time
+
 import Control.Monad
 import Data.Int
 import qualified Data.Map as Map
@@ -41,8 +43,23 @@ import System.FilePath
 type Name = String
 type Size = Integer
 
-data FileObj = File   Name Size
-             | Folder Name [FileObj]
+data FileObj = File   Name Properties Size
+             | Folder Name Properties [FileObj]
+  deriving (Show)
+
+-- Note - adding properties is onerous for dir listings. 
+--
+-- We can always get modification time / access time from the 
+-- FileSystem, but if we are making a FileObj from the output
+-- of dir times may not be available.
+--
+-- It seems prudent to maybe-fy them, metrics are going to 
+-- have to deal with bad data at sme point anyway.
+--
+data Properties = Properties
+    { access_time       :: Maybe UTCTime
+    , modification_time :: Maybe UTCTime
+    }
   deriving (Show)
 
 -- Other possible file stats are modification time, access time, premissions
@@ -66,17 +83,17 @@ instance ExtendPath Context FilePath where
 
 
 -- Congruence combinator                     
-fileT :: Monad m => (Name -> Size -> b) -> Transform c m FileObj b
+fileT :: Monad m => (Name -> Properties -> Size -> b) -> Transform c m FileObj b
 fileT f = contextfreeT $ \case
-    File s sz -> return (f s sz)
+    File s props sz -> return (f s props sz)
     _         -> fail "not a File"
 
 -- congruence combinator
 -- Note Path is not propagated (this is a limitation that could be improved)
 folderT :: (ExtendPath c FilePath, Monad m) 
-        => Transform c m FileObj a -> (Name -> [a] -> b) -> Transform c m FileObj b
+        => Transform c m FileObj a -> (Name -> Properties -> [a] -> b) -> Transform c m FileObj b
 folderT t f = transform $ \c -> \case
-    Folder s ks -> let c1 = c @@ s in f s <$> mapM (\fo -> applyT t c1 fo) ks
+    Folder s props ks -> let c1 = c @@ s in f s props <$> mapM (\fo -> applyT t c1 fo) ks
     _ -> fail "not a Folder"
                              
 
@@ -104,13 +121,26 @@ populate = foldersR
     listDirectoryLong :: FilePath -> IO [FilePath]
     listDirectoryLong path = map (path </>) <$> listDirectory path
 
-    foldersR path = do { kids <- filterM doesDirectoryExist =<< listDirectoryLong path 
+    foldersR path = do { props <- populateProperties path
+                       ; kids  <- filterM doesDirectoryExist =<< listDirectoryLong path 
                        ; kids' <- mapM foldersR kids
                        ; files <- files1 path
-                       ; return $ Folder (takeFileName path) (kids' ++ files) }
+                       ; return $ Folder (takeFileName path) props (kids' ++ files) }
                        
     files1 path = do { xs <- filterM doesFileExist =<< listDirectoryLong path 
-                     ; mapM (\x -> do {sz <- getFileSize x; return $ File (takeFileName x) sz }) xs }
+                     ; forM xs (\x -> do { props <- populateProperties x
+                                         ; sz <- getFileSize x
+                                         ; return $ File (takeFileName x) props sz }) 
+                     }
+
+
+populateProperties :: FilePath -> IO Properties
+populateProperties path = do 
+    a <- getAccessTime path
+    m <- getModificationTime path
+    return $ Properties { access_time = Just a
+                        , modification_time = Just m
+                        }
 
 
 --------------------------------------------------------------------------------
@@ -133,7 +163,7 @@ blankLine = LineDoc $ text ""
 -- Ideally KURE would have a one-level version of collectT 
 prettyDir :: TransformE FileObj LineDoc
 prettyDir = withPatFailMsg "addLitR failed" $
-            do (c, Folder s _) <- exposeT
+            do (c, Folder s _ _) <- exposeT
                let d0 = LineDoc $ text (getContext c </> s) <> char ':'
                d1 <- allT pretty1
                ds <- allT (mtryM prettyDir)
@@ -154,8 +184,8 @@ vsep (d:ds)     = d $+$ vsep ds
 -- No descending into terms.
 pretty1 :: TransformE FileObj LineDoc
 pretty1 = transform $ \_ -> \case
-    File s _ -> return $ LineDoc $ nest 6 (text s)
-    Folder s _ -> return $ LineDoc $ text "<DIR>" <+> text s
+    File s _ _ -> return $ LineDoc $ nest 6 (text s)
+    Folder s _ _ -> return $ LineDoc $ text "<DIR>" <+> text s
 
 --------------------------------------------------------------------------------
 -- Towards metrics
@@ -172,7 +202,7 @@ largestFile = runKureM Right Left . applyT largestFile1 zeroContext
 -- max monoid
 largestFile1 :: TransformE FileObj Integer
 largestFile1 = fmap (fromIntegral . getMax) $ crushtdT $ 
-    do File _ sz <- idR
+    do File _ _ sz <- idR
        return $ maxi sz
 
 
@@ -185,7 +215,7 @@ largestFileNamed = runKureM Right Left . applyT largestFileNamed1 zeroContext
 -- max monoid
 largestFileNamed1 :: TransformE FileObj (String,Integer)
 largestFileNamed1 = fmap get $ crushtdT $ 
-    do File s sz <- idR
+    do File s _ sz <- idR
        return $ LargestInteger $ Labelled s sz
   where
     get (LargestInteger (Labelled s i)) = (s,i)
@@ -213,6 +243,10 @@ countFolders = runKureM Right Left . applyT countFolders1 zeroContext
 
 
 -- Note - don't count the root folder (so don't use crushtdT)
+--
+-- Design note - this is implemented with a recursion that we 
+-- could just as easily do without using strategies, can we do it better?
+--
 countFolders1 :: TransformE FileObj Integer
 countFolders1 = fmap getSum go_kids
   where
@@ -249,7 +283,7 @@ subsystems = runKureM Right Left . applyT subsystems1 zeroContext
 subsystems1 :: TransformE FileObj Histo
 subsystems1 = fmap Map.fromList $ allT $ tryM [] go_folder
   where
-    go_folder = do Folder s _ <- idR
+    go_folder = do Folder s _ _ <- idR
                    i <- countFiles1
                    j <- countFolders1
                    return [(s,i+j)]
