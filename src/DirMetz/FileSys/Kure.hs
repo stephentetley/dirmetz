@@ -10,7 +10,7 @@
 
 --------------------------------------------------------------------------------
 -- |
--- Module      :  Doodle.FileSys.Kure
+-- Module      :  DirMetz.FileSys.Kure
 -- Copyright   :  (c) Stephen Tetley 2017
 -- License     :  BSD3
 --
@@ -23,10 +23,10 @@
 --------------------------------------------------------------------------------
 
 
-module Doodle.FileSys.Kure where
+module DirMetz.FileSys.Kure where
 
-import Doodle.FileSys.Base
-import Doodle.Metrics
+import DirMetz.FileSys.Base
+import DirMetz.Metrics
 
 
 import Language.KURE                    -- package: kure

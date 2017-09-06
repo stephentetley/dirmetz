@@ -2,7 +2,7 @@
 
 --------------------------------------------------------------------------------
 -- |
--- Module      :  Doodle.FileSys.Base
+-- Module      :  DirMetz.FileSys.Base
 -- Copyright   :  (c) Stephen Tetley 2017
 -- License     :  BSD3
 --
@@ -15,7 +15,7 @@
 --------------------------------------------------------------------------------
 
 
-module Doodle.FileSys.Base where
+module DirMetz.FileSys.Base where
 
 
 import Data.Time                        -- package: time

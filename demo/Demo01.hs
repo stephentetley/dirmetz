@@ -1,16 +1,10 @@
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE InstanceSigs               #-}
-{-# LANGUAGE LambdaCase                 #-}
-{-# LANGUAGE UndecidableInstances       #-}
 {-# OPTIONS -Wall #-}
 
 
-module DemoFileListing where
+module Demo01 where
 
-import Doodle.FileSys.Base
-import Doodle.FileSys.Kure
+import DirMetz.FileSys.Base
+import DirMetz.FileSys.Kure
 
 -- import Language.KURE                    -- package: kure
 

@@ -1,4 +1,4 @@
-name:             kure-doodle
+name:             dirmetz
 version:          0.1.0
 license:          BSD3
 license-file:     LICENSE
@@ -6,10 +6,13 @@ copyright:        Stephen Tetley <stephen.tetley@gmail.com>
 maintainer:       Stephen Tetley <stephen.tetley@gmail.com>
 homepage:         https://github.com/stephentetley/kure-doodle
 category:         Todo
-synopsis:         Experiments with Kure (The Kansas University Rewrite Engine)
+synopsis:         Metrics for file systems.
 description:
   .
-  Experiments with Kure (The Kansas University Rewrite Engine)
+  Metrics for file systems.
+  . 
+  This is an experiment using Kure (The Kansas University Rewrite Engine)
+  to implement a suite of file system metrics.
   .
 
 build-type:         Simple
@@ -30,9 +33,9 @@ library
                       time,
                       kure
   exposed-modules:
-    Doodle.FileSys.Base,
-    Doodle.FileSys.Kure,
-    Doodle.Metrics
+    DirMetz.FileSys.Base,
+    DirMetz.FileSys.Kure,
+    DirMetz.Metrics
     
 
   other-modules:

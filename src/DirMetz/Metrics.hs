@@ -2,7 +2,7 @@
 
 --------------------------------------------------------------------------------
 -- |
--- Module      :  Doodle.Metrics
+-- Module      :  DirMetz.Metrics
 -- Copyright   :  (c) Stephen Tetley 2017
 -- License     :  BSD3
 --
@@ -15,7 +15,7 @@
 --------------------------------------------------------------------------------
 
 
-module Doodle.Metrics where
+module DirMetz.Metrics where
 
 import Data.Semigroup
 import Data.Time
