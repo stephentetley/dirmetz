@@ -10,6 +10,7 @@
 module DemoFileListing where
 
 import Doodle.FileSys.Base
+import Doodle.FileSys.Kure
 
 -- import Language.KURE                    -- package: kure
 

@@ -31,6 +31,7 @@ library
                       kure
   exposed-modules:
     Doodle.FileSys.Base,
+    Doodle.FileSys.Kure,
     Doodle.Metrics
     
 
