@@ -35,6 +35,7 @@ library
   exposed-modules:
     DirMetz.FileSys.Base,
     DirMetz.FileSys.Kure,
+    DirMetz.FileSys.Metrics1
     DirMetz.Metrics
     
 
