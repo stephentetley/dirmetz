@@ -4,8 +4,8 @@ license:          BSD3
 license-file:     LICENSE
 copyright:        Stephen Tetley <stephen.tetley@gmail.com>
 maintainer:       Stephen Tetley <stephen.tetley@gmail.com>
-homepage:         https://github.com/stephentetley/kure-doodle
-category:         Todo
+homepage:         https://github.com/stephentetley/dirmetz
+category:         Metrics
 synopsis:         Metrics for file systems.
 description:
   .
@@ -29,11 +29,14 @@ library
                       containers,
                       directory,
                       filepath,
+                      mtl,
                       pretty,
                       time,
-                      kure
+                      parsec >= 3.1,
+                      kure >= 2.16
   exposed-modules:
     DirMetz.FileSys.Base,
+    DirMetz.FileSys.DirRecurseParser,
     DirMetz.FileSys.Kure,
     DirMetz.FileSys.Metrics1
     DirMetz.Metrics
