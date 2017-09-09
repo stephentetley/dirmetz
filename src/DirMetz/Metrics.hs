@@ -21,6 +21,14 @@ import Data.Semigroup
 import Data.Time
 
 
+data Metric a = Metric
+    { metric_name :: String
+    , metric_desription :: a
+    , metric_result :: a
+    }
+  deriving (Eq,Ord,Show)
+
+
 -- labelling Metrics seems like a good idea
 
 data Labelled a = Labelled !String !a 

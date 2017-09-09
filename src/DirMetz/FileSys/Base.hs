@@ -25,6 +25,9 @@ import System.Directory
 import System.FilePath
 
 
+hoursMinutesSecondsToDiffTime :: Int -> Int -> Integer -> DiffTime
+hoursMinutesSecondsToDiffTime h m s = secondsToDiffTime $ s + 60 * (fromIntegral m) + 3600 * (fromIntegral h)
+
 
 type Name = String
 type Size = Integer

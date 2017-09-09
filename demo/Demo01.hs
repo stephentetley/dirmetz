@@ -4,7 +4,10 @@
 module Demo01 where
 
 import DirMetz.FileSys.Base
+import DirMetz.FileSys.DirRecurseParser
 import DirMetz.FileSys.Kure
+import DirMetz.FileSys.Metrics1
+
 
 -- import Language.KURE                    -- package: kure
 
@@ -65,5 +68,6 @@ temp02 = UTCTime { utctDay = day, utctDayTime = daytime }
     day = fromGregorian 2017 09 05
     daytime = hoursMinutesSecondsToDiffTime 12 30 00
 
-hoursMinutesSecondsToDiffTime :: Int -> Int -> Integer -> DiffTime
-hoursMinutesSecondsToDiffTime h m s = secondsToDiffTime $ s + 60 * (fromIntegral m) + 3600 * (fromIntegral h)
+
+temp03 = testP pName "File Name with space.txt     "
+temp04 = testP pUTCTime "29/05/2017     15:27      "
