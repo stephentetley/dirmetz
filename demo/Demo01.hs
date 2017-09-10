@@ -56,6 +56,8 @@ demo06 = getCurrentDirectory >>= populate >>= \fo -> case subsystems fo of
     Left err -> error err
 
 
+demo07 = readListing "./demo/data/dir-recurse.txt"
+
 -- getModificationTime returns UTCTime 
 type Timestamp = UTCTime
 
@@ -71,3 +73,11 @@ temp02 = UTCTime { utctDay = day, utctDayTime = daytime }
 
 temp03 = testP pName "File Name with space.txt     "
 temp04 = testP pUTCTime "29/05/2017     15:27      "
+temp05 = testP lineEnd ""
+temp06 = testIOP (lineEnd *> lineEnd *> pDirectoryName) "./demo/data/dir-recurse.txt"
+
+temp07 = testP (lineEnd *> lineEnd *> pDirectoryName) $ 
+       unlines $ [ ""
+                 , ""
+                 , "    Directory: E:\\coding\\fsharp\\fsharp-snippets"
+                 ]

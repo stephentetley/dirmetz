@@ -20,7 +20,8 @@ module DirMetz.FileSys.DirRecurseParser where
 import DirMetz.FileSys.Base
 
 import Text.Parsec                              -- package: parsec
-import Text.Parsec.Language (emptyDef)
+import Text.Parsec.Language ( emptyDef )
+import Text.Parsec.String ( parseFromFile )
 import qualified Text.Parsec.Token as P
 
 
@@ -37,6 +38,10 @@ type Lexer           = P.GenTokenParser String () Identity
 testP :: Parser a -> String -> Either String a
 testP p s = first show $ parse p "no source" s 
 
+testIOP :: Parser a -> FilePath -> IO (Either String a)
+testIOP p path = fmap (first show) $ parseFromFile p path
+
+
 
 
 -- Use a notational convention - Directories are not "filled" until 
@@ -44,10 +49,10 @@ testP p s = first show $ parse p "no source" s
 -- 
 type Element = FileObj
 
-data Block = Block Name Element
+data Block = Block Name [Element]
   deriving (Show)
 
-
+type Listing = [Block]
 
 pMode :: Parser String
 pMode = many1 (lower <|> char '-')
@@ -81,7 +86,7 @@ pSize :: Parser Size
 pSize = integer
 
 pDirectoryName :: Parser String
-pDirectoryName = spaces *> string "Directory:" *> spaces *> pName
+pDirectoryName = indented (string "Directory:" *> ws1 *> pName)
 
 pHeadings :: Parser ()
 pHeadings = titles *> underlines
@@ -92,6 +97,9 @@ pHeadings = titles *> underlines
                  (underline *> ws) *> (underline *> ws) *> lineEnd
 
 
+
+-- | This is a context sensitive parser 
+--
 pElement :: Parser Element
 pElement = pMode >>= elementK
   where
@@ -101,8 +109,29 @@ pElement = pMode >>= elementK
     elementK _                  = (\props size name -> File name props size)
                                     <$> pLastWriteTime <*> pSize <*> pName
 
+pBlock :: Parser Block
+pBlock = Block  <$> indented pDirectoryName 
+                <*> (twice blankLine *> lineOf pHeadings *> many (lineOf pElement))
+                <*  threeTimes blankLine
+
+pListing :: Parser Listing
+pListing = twice emptyLine *> many1 pBlock
+
+
+-- Problem - output of dir -recurse seems to be in "UCS-2 LE BOM"
+-- and not UTF8, this is causing horrible errors...
+--
+readListing :: FilePath -> IO (Either String Listing)
+readListing path = fmap (first show) $ parseFromFile pListing path
+
 --------------------------------------------------------------------------------
 -- Lexer and utils
+
+twice :: Parser a -> Parser (a,a)
+twice p = (,) <$> p <*> p
+
+threeTimes :: Parser a -> Parser (a,a,a)
+threeTimes p = (,,) <$> p <*> p <*> p
 
 sepStrings :: [String]  -> Parser [String]
 sepStrings []           = return []
@@ -113,21 +142,31 @@ sepStrings (s:ss)       = step s ss
     step s1 (c:cs)       = (:) <$> (string s1 <* spaces) <*> step c cs
 
 
+indented :: Parser a -> Parser a
+indented p = ws1 *> p
+
 
 ws :: Parser () 
-ws = many (char ' ' <|> char '\t') *> return ()
+ws = many (char ' ' <|> char '\t' <|> char '\r') *> return ()
 
 ws1 :: Parser () 
-ws1 = many1 (char ' ' <|> char '\t') *> return ()
+ws1 = many1 (char ' ' <|> char '\t' <|> char '\r') *> return ()
 
 lineEnd :: Parser ()
-lineEnd = void endOfLine <|> eof
+lineEnd = void endOfLine <|> winEnd <|> eof
+  where
+    -- Something has gone wrong with CRLF detection...
+    winEnd = void $ (char (chr 160) <|> char (chr 9632))
 
 lineOf :: Parser a -> Parser a
 lineOf p = p <* lineEnd
 
 blankLine :: Parser ()
 blankLine = spaces *> lineEnd
+
+emptyLine :: Parser ()
+emptyLine = lineEnd
+
 
 underline :: Parser ()
 underline = many1 (char '-') *> return ()
