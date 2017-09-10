@@ -1,0 +1,1159 @@
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       29/05/2017     15:27                ConcatPDFs                                                            
+d-----       29/05/2017     21:44                PhotoDoc                                                              
+d-----       30/05/2017     14:55                sketch                                                                
+d-----       31/05/2017     19:21                WordExtractors                                                        
+d-----       04/06/2017     10:16                _old                                                                  
+-a----       24/06/2017     12:38              0 dir-Recurse.txt                                                       
+-a----       26/03/2017     22:24           1514 LICENSE                                                               
+-a----       26/03/2017     22:24            125 README.md                                                             
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\ConcatPDFs
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       29/05/2017     15:27                src                                                                   
+-a----       29/05/2017     15:27            987 ConcatPDFs.sln                                                        
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\ConcatPDFs\src
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       29/05/2017     15:27                bin                                                                   
+d-----       29/05/2017     15:27                obj                                                                   
+-a----       29/05/2017     15:14           1507 AssemblyInfo.fs                                                       
+-a----       29/05/2017     15:24           3554 ConcatPDFs.fsproj                                                     
+-a----       28/05/2017     22:53           1038 ConcatPDFs.fsx                                                        
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\ConcatPDFs\src\bin
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       29/05/2017     15:27                Debug                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\ConcatPDFs\src\obj
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       29/05/2017     15:27                Debug                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\PhotoDoc
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       30/05/2017     23:16                src                                                                   
+-a----       29/05/2017     21:37            983 PhotoDoc.sln                                                          
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\PhotoDoc\src
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       29/05/2017     21:36                bin                                                                   
+d-----       30/05/2017     14:07                obj                                                                   
+-a----       29/05/2017     21:36           1501 AssemblyInfo.fs                                                       
+-a----       30/05/2017     21:17           2029 DocBuilder.fs                                                         
+-a----       29/05/2017     23:21           4221 PhotoDoc.fsproj                                                       
+-a----       30/05/2017     23:16           1221 Script.fsx                                                            
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\PhotoDoc\src\bin
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       29/05/2017     21:36                Debug                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\PhotoDoc\src\obj
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       29/05/2017     23:09                Debug                                                                 
+-a----       30/05/2017     14:07           1049 PhotoDoc.fsproj.ResolveComReference.cache                             
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\PhotoDoc\src\obj\Debug
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       29/05/2017     23:09           1049 PhotoDoc.fsproj.ResolveComReference.cache                             
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:47                data                                                                  
+d-----       24/06/2017     12:23                fsharp-snippets                                                       
+d-----       07/05/2017     22:47                packages                                                              
+-a----       26/03/2017     21:23           1012 fsharp-snippets.sln                                                   
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\data
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       07/05/2017     22:16           2048 db1.sqlite                                                            
+-a----       07/05/2017     22:47              0 MyDatabase.sqlite                                                     
+-a----       20/04/2017     19:46        2962166 rts.csv                                                               
+-a----       24/04/2017     23:29        1442632 rts.out.csv                                                           
+-a----       20/04/2017     13:27           2264 SAMPLE.odf                                                            
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\fsharp-snippets
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       26/03/2017     21:23                bin                                                                   
+d-----       26/03/2017     21:23                obj                                                                   
+-a----       07/05/2017     22:47            863 App.config                                                            
+-a----       26/03/2017     21:23           1522 AssemblyInfo.fs                                                       
+-a----       19/04/2017     21:12           8344 Coord.fs                                                              
+-a----       24/04/2017     23:29            572 CsvTrim.fsx                                                           
+-a----       18/04/2017     17:33            467 Excel1.fsx                                                            
+-a----       18/04/2017     20:52            628 Excel2.fsx                                                            
+-a----       27/04/2017     22:45            839 Fact.fs                                                               
+-a----       18/06/2017     23:07           8013 fsharp-snippets.fsproj                                                
+-a----       19/04/2017     21:16            866 GeoDistance.fs                                                        
+-a----       18/04/2017     14:43            804 Json1.fsx                                                             
+-a----       18/04/2017     14:43            650 Json2.fsx                                                             
+-a----       07/05/2017     22:47            949 packages.config                                                       
+-a----       24/04/2017     23:37           3263 ParseODF.fsx                                                          
+-a----       26/04/2017     23:12            914 Regex1.fsx                                                            
+-a----       27/04/2017     20:15            505 Regex2.fsx                                                            
+-a----       07/05/2017     22:49           1118 SQLite1.fsx                                                           
+-a----       20/04/2017     15:27            492 Temp1.fsx                                                             
+-a----       27/04/2017     22:47            162 TestFact.fsx                                                          
+-a----       27/04/2017     22:17           1363 TestGeo.fsx                                                           
+-a----       18/06/2017     19:50             39 TestXPath2.fsx                                                        
+-a----       18/06/2017     18:34           4663 WadlerXPath1.fs                                                       
+-a----       18/04/2017     11:11           1113 WordForm.fsx                                                          
+-a----       24/06/2017     12:23           2297 XPath2.fs                                                             
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\fsharp-snippets\bin
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       26/03/2017     21:23                Debug                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\fsharp-snippets\obj
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       26/03/2017     21:23                Debug                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:46                EntityFramework.6.1.3                                                 
+d-----       18/04/2017     17:38                ExcelProvider.0.8.1                                                   
+d-----       19/04/2017     21:54                FParsec.1.0.2                                                         
+d-----       20/04/2017     20:58                FSharp.Data.2.3.3                                                     
+d-----       26/04/2017     20:35                FSharp.Text.RegexProvider.1.0.0                                       
+d-----       18/04/2017     13:19                Newtonsoft.Json.10.0.2                                                
+d-----       07/05/2017     22:40                SQLProvider.1.0.54                                                    
+d-----       07/05/2017     22:47                System.Data.SQLite.1.0.105.0                                          
+d-----       07/05/2017     22:43                System.Data.SQLite.Core.1.0.105.0                                     
+d-----       07/05/2017     22:47                System.Data.SQLite.EF6.1.0.105.0                                      
+d-----       07/05/2017     22:47                System.Data.SQLite.Linq.1.0.105.0                                     
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\EntityFramework.6.1.3
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:46                content                                                               
+d-----       07/05/2017     22:46                lib                                                                   
+d-----       07/05/2017     22:46                tools                                                                 
+-a----       07/05/2017     22:46        4255648 EntityFramework.6.1.3.nupkg                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\EntityFramework.6.1.3\content
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       25/02/2016     22:51            209 App.config.transform                                                  
+-a----       25/02/2016     22:51            209 Web.config.transform                                                  
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\EntityFramework.6.1.3\lib
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:46                net40                                                                 
+d-----       07/05/2017     22:46                net45                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\EntityFramework.6.1.3\lib\net40
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       25/02/2016     22:51        4976848 EntityFramework.dll                                                   
+-a----       25/02/2016     22:51         601808 EntityFramework.SqlServer.dll                                         
+-a----       25/02/2016     22:51         145441 EntityFramework.SqlServer.xml                                         
+-a----       25/02/2016     22:51        3229543 EntityFramework.xml                                                   
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\EntityFramework.6.1.3\lib\net45
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       25/02/2016     22:51        5196496 EntityFramework.dll                                                   
+-a----       25/02/2016     22:51         621264 EntityFramework.SqlServer.dll                                         
+-a----       25/02/2016     22:51         154866 EntityFramework.SqlServer.xml                                         
+-a----       25/02/2016     22:51        3652961 EntityFramework.xml                                                   
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\EntityFramework.6.1.3\tools
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       25/02/2016     22:51           1970 about_EntityFramework.help.txt                                        
+-a----       25/02/2016     22:51          50896 EntityFramework.PowerShell.dll                                        
+-a----       25/02/2016     22:51          13512 EntityFramework.PowerShell.Utility.dll                                
+-a----       25/02/2016     22:51          24844 EntityFramework.psd1                                                  
+-a----       25/02/2016     22:51          44290 EntityFramework.psm1                                                  
+-a----       25/02/2016     22:51          10032 init.ps1                                                              
+-a----       25/02/2016     22:51          10145 install.ps1                                                           
+-a----       25/02/2016     22:51         540368 migrate.exe                                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\ExcelProvider.0.8.1
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       18/04/2017     17:38                lib                                                                   
+-a----       18/04/2017     17:38         392587 ExcelProvider.0.8.1.nupkg                                             
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\ExcelProvider.0.8.1\lib
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       07/05/2014     09:57          68608 Excel.dll                                                             
+-a----       07/05/2014     09:57         237056 Excel.pdb                                                             
+-a----       02/02/2017     13:36         323072 ExcelProvider.dll                                                     
+-a----       02/02/2017     13:02            181 ExcelProvider.dll.config                                              
+-a----       02/02/2017     13:36         474624 ExcelProvider.pdb                                                     
+-a----       02/02/2017     13:36          37551 ExcelProvider.XML                                                     
+-a----       03/01/2011     14:16         200704 ICSharpCode.SharpZipLib.dll                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FParsec.1.0.2
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       19/04/2017     21:54                lib                                                                   
+-a----       19/04/2017     21:54         272332 FParsec.1.0.2.nupkg                                                   
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FParsec.1.0.2\lib
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       19/04/2017     21:54                net40-client                                                          
+d-----       19/04/2017     21:54                portable-net45+netcore45+wpa81+wp8                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FParsec.1.0.2\lib\net40-client
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       27/09/2015     19:20         239104 FParsec.dll                                                           
+-a----       27/09/2015     19:20          88697 FParsec.XML                                                           
+-a----       27/09/2015     19:20         109056 FParsecCS.dll                                                         
+-a----       27/09/2015     19:20           6782 FParsecCS.XML                                                         
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FParsec.1.0.2\lib\portable-net45+netcore45+wpa81+wp8
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       27/09/2015     19:20         239616 FParsec.dll                                                           
+-a----       27/09/2015     19:20          88135 FParsec.XML                                                           
+-a----       27/09/2015     19:20         109056 FParsecCS.dll                                                         
+-a----       27/09/2015     19:20           6782 FParsecCS.XML                                                         
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Data.2.3.3
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       20/04/2017     20:58                lib                                                                   
+d-----       20/04/2017     20:58                linqpad-samples                                                       
+-a----       20/04/2017     20:58        6583351 FSharp.Data.2.3.3.nupkg                                               
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Data.2.3.3\lib
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       20/04/2017     20:58                net40                                                                 
+d-----       20/04/2017     20:58                portable-net45+netcore45                                              
+d-----       20/04/2017     20:58                portable-net45+netcore45+wpa81+wp8                                    
+d-----       20/04/2017     20:58                portable-net45+sl50+netcore45                                         
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Data.2.3.3\lib\net40
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       10/04/2017     23:32        2201600 FSharp.Data.DesignTime.dll                                            
+-a----       10/04/2017     23:32        2283008 FSharp.Data.DesignTime.pdb                                            
+-a----       10/04/2017     23:32         180802 FSharp.Data.DesignTime.xml                                            
+-a----       10/04/2017     23:32         870912 FSharp.Data.dll                                                       
+-a----       10/04/2017     23:32         912896 FSharp.Data.pdb                                                       
+-a----       10/04/2017     23:32         123550 FSharp.Data.xml                                                       
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Data.2.3.3\lib\portable-net45+netcore45
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       10/04/2017     23:32        2201600 FSharp.Data.DesignTime.dll                                            
+-a----       10/04/2017     23:32        2283008 FSharp.Data.DesignTime.pdb                                            
+-a----       10/04/2017     23:32         180802 FSharp.Data.DesignTime.xml                                            
+-a----       10/04/2017     23:32         853504 FSharp.Data.dll                                                       
+-a----       10/04/2017     23:32         878080 FSharp.Data.pdb                                                       
+-a----       10/04/2017     23:32         122921 FSharp.Data.xml                                                       
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Data.2.3.3\lib\portable-net45+netcore45+wpa81+wp8
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       10/04/2017     23:32        2201600 FSharp.Data.DesignTime.dll                                            
+-a----       10/04/2017     23:32        2283008 FSharp.Data.DesignTime.pdb                                            
+-a----       10/04/2017     23:32         180802 FSharp.Data.DesignTime.xml                                            
+-a----       10/04/2017     23:32         852992 FSharp.Data.dll                                                       
+-a----       10/04/2017     23:32         880128 FSharp.Data.pdb                                                       
+-a----       10/04/2017     23:32         122921 FSharp.Data.xml                                                       
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Data.2.3.3\lib\portable-net45+sl50+netcore45
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       10/04/2017     23:32        2201600 FSharp.Data.DesignTime.dll                                            
+-a----       10/04/2017     23:32        2283008 FSharp.Data.DesignTime.pdb                                            
+-a----       10/04/2017     23:32         180802 FSharp.Data.DesignTime.xml                                            
+-a----       10/04/2017     23:32         851456 FSharp.Data.dll                                                       
+-a----       10/04/2017     23:32         871936 FSharp.Data.pdb                                                       
+-a----       10/04/2017     23:32         122921 FSharp.Data.xml                                                       
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Data.2.3.3\linqpad-samples
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       10/04/2017     23:32            839 GitHub.linq                                                           
+-a----       10/04/2017     23:32            624 Jira.linq                                                             
+-a----       10/04/2017     23:32           1583 TypeInference.linq                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Text.RegexProvider.1.0.0
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       26/04/2017     20:35                docs                                                                  
+d-----       26/04/2017     20:35                lib                                                                   
+-a----       26/04/2017     20:35         192046 FSharp.Text.RegexProvider.1.0.0.nupkg                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Text.RegexProvider.1.0.0\docs
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       26/04/2017     20:35                content                                                               
+d-----       26/04/2017     20:35                img                                                                   
+d-----       26/04/2017     20:35                reference                                                             
+-a----       07/07/2016     21:04          11837 index.html                                                            
+-a----       07/07/2016     21:04          13537 license.html                                                          
+-a----       07/07/2016     21:04           4998 release-notes.html                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Text.RegexProvider.1.0.0\docs\content
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       26/04/2017     20:35                img                                                                   
+-a----       07/07/2016     21:04           5250 style.css                                                             
+-a----       07/07/2016     21:04           4330 style.css.bak                                                         
+-a----       07/07/2016     21:04           5163 style_light.css                                                       
+-a----       07/07/2016     21:04           1340 tips.js                                                               
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Text.RegexProvider.1.0.0\docs\content\img
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       07/07/2016     21:04            817 github-blue.png                                                       
+-a----       07/07/2016     21:04            806 github.png                                                            
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Text.RegexProvider.1.0.0\docs\img
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       07/07/2016     21:04           8489 RegexProvider.png                                                     
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Text.RegexProvider.1.0.0\docs\reference
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       07/07/2016     21:04           4245 fsharp-text-regexprovider-regex.html                                  
+-a----       07/07/2016     21:04           3594 fsharp-text-regexprovider-regexprovider.html                          
+-a----       07/07/2016     21:04           4146 index.html                                                            
+-a----       07/07/2016     21:04           6817 samples-fsharp-providedtypes-providedassembly.html                    
+-a----       07/07/2016     21:04           6435 samples-fsharp-providedtypes-typeproviderfornamespaces.html           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Text.RegexProvider.1.0.0\lib
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       26/04/2017     20:35                net40                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Text.RegexProvider.1.0.0\lib\net40
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       07/07/2016     21:04         222720 FSharp.Text.RegexProvider.dll                                         
+-a----       07/07/2016     21:04         327168 FSharp.Text.RegexProvider.pdb                                         
+-a----       07/07/2016     21:04          27135 FSharp.Text.RegexProvider.XML                                         
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       18/04/2017     13:19                lib                                                                   
+d-----       18/04/2017     13:19                tools                                                                 
+-a----       02/04/2017     17:46           1104 LICENSE.md                                                            
+-a----       18/04/2017     13:19        2060233 Newtonsoft.Json.10.0.2.nupkg                                          
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       18/04/2017     13:19                net20                                                                 
+d-----       18/04/2017     13:19                net35                                                                 
+d-----       18/04/2017     13:19                net40                                                                 
+d-----       18/04/2017     13:19                net45                                                                 
+d-----       18/04/2017     13:19                netstandard1.0                                                        
+d-----       18/04/2017     13:19                netstandard1.3                                                        
+d-----       18/04/2017     13:19                portable-net40+sl5+win8+wpa81+wp8                                     
+d-----       18/04/2017     13:19                portable-net45+win8+wpa81+wp8                                         
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\net20
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       02/04/2017     17:46         494592 Newtonsoft.Json.dll                                                   
+-a----       02/04/2017     17:46         572193 Newtonsoft.Json.xml                                                   
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\net35
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       02/04/2017     17:46         457216 Newtonsoft.Json.dll                                                   
+-a----       02/04/2017     17:46         515871 Newtonsoft.Json.xml                                                   
+	
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\net40
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       02/04/2017     17:46         522240 Newtonsoft.Json.dll                                                   
+-a----       02/04/2017     17:46         527790 Newtonsoft.Json.xml                                                   
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\net45
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       02/04/2017     17:46         652288 Newtonsoft.Json.dll                                                   
+-a----       02/04/2017     17:46         674087 Newtonsoft.Json.xml                                                   
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\netstandard1.0
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       02/04/2017     17:46         621056 Newtonsoft.Json.dll                                                   
+-a----       02/04/2017     17:46         654169 Newtonsoft.Json.xml                                                   
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\netstandard1.3
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       02/04/2017     17:46         636416 Newtonsoft.Json.dll                                                   
+-a----       02/04/2017     17:46         660397 Newtonsoft.Json.xml                                                   
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\portable-net40+sl5+win8+wpa81+wp8
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       02/04/2017     17:46         429056 Newtonsoft.Json.dll                                                   
+-a----       02/04/2017     17:46         489320 Newtonsoft.Json.xml                                                   
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\portable-net45+win8+wpa81+wp8
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       02/04/2017     17:46         620544 Newtonsoft.Json.dll                                                   
+-a----       02/04/2017     17:46         654169 Newtonsoft.Json.xml                                                   
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\tools
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       02/04/2017     17:46           3852 install.ps1                                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\SQLProvider.1.0.54
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:40                lib                                                                   
+-a----       07/05/2017     22:40         442074 SQLProvider.1.0.54.nupkg                                              
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\SQLProvider.1.0.54\lib
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       26/04/2017     13:21        1469440 FSharp.Data.SqlProvider.dll                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.1.0.105.0
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       07/05/2017     22:47           3098 System.Data.SQLite.1.0.105.0.nupkg                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:43                build                                                                 
+d-----       07/05/2017     22:43                lib                                                                   
+-a----       07/05/2017     22:43        8001065 System.Data.SQLite.Core.1.0.105.0.nupkg                               
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:43                net20                                                                 
+d-----       07/05/2017     22:43                net40                                                                 
+d-----       07/05/2017     22:43                net45                                                                 
+d-----       07/05/2017     22:43                net451                                                                
+d-----       07/05/2017     22:43                net46                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net20
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:43                x64                                                                   
+d-----       07/05/2017     22:43                x86                                                                   
+-a----       08/04/2017     22:55           5792 System.Data.SQLite.Core.targets                                       
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net20\x64
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55        1474560 SQLite.Interop.dll                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net20\x86
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55        1041408 SQLite.Interop.dll                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net40
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:43                x64                                                                   
+d-----       07/05/2017     22:43                x86                                                                   
+-a----       08/04/2017     22:55           5792 System.Data.SQLite.Core.targets                                       
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net40\x64
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55        1455616 SQLite.Interop.dll                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net40\x86
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55        1091072 SQLite.Interop.dll                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net45
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:43                x64                                                                   
+d-----       07/05/2017     22:43                x86                                                                   
+-a----       08/04/2017     22:55           5792 System.Data.SQLite.Core.targets                                       
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net45\x64
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55        1469952 SQLite.Interop.dll                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net45\x86
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55        1189888 SQLite.Interop.dll                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net451
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:43                x64                                                                   
+d-----       07/05/2017     22:43                x86                                                                   
+-a----       08/04/2017     22:55           5792 System.Data.SQLite.Core.targets                                       
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net451\x64
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55        1469440 SQLite.Interop.dll                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net451\x86
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55        1174528 SQLite.Interop.dll                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net46
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:43                x64                                                                   
+d-----       07/05/2017     22:43                x86                                                                   
+-a----       08/04/2017     22:55           5792 System.Data.SQLite.Core.targets                                       
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net46\x64
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55        1465344 SQLite.Interop.dll                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\build\net46\x86
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55        1148928 SQLite.Interop.dll                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\lib
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:43                net20                                                                 
+d-----       07/05/2017     22:43                net40                                                                 
+d-----       07/05/2017     22:43                net45                                                                 
+d-----       07/05/2017     22:43                net451                                                                
+d-----       07/05/2017     22:43                net46                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\lib\net20
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         327680 System.Data.SQLite.dll                                                
+-a----       08/04/2017     22:55            671 System.Data.SQLite.dll.config                                         
+-a----       08/04/2017     22:55         883086 System.Data.SQLite.xml                                                
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\lib\net40
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         318976 System.Data.SQLite.dll                                                
+-a----       08/04/2017     22:55            671 System.Data.SQLite.dll.config                                         
+-a----       08/04/2017     22:55         883086 System.Data.SQLite.xml                                                
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\lib\net45
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         318976 System.Data.SQLite.dll                                                
+-a----       08/04/2017     22:55            671 System.Data.SQLite.dll.config                                         
+-a----       08/04/2017     22:55         883086 System.Data.SQLite.xml                                                
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\lib\net451
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         318976 System.Data.SQLite.dll                                                
+-a----       08/04/2017     22:55            671 System.Data.SQLite.dll.config                                         
+-a----       08/04/2017     22:55         883086 System.Data.SQLite.xml                                                
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Core.1.0.105.0\lib\net46
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         311808 System.Data.SQLite.dll                                                
+-a----       08/04/2017     22:55            671 System.Data.SQLite.dll.config                                         
+-a----       08/04/2017     22:55         884343 System.Data.SQLite.xml                                                
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:47                content                                                               
+d-----       07/05/2017     22:47                lib                                                                   
+d-----       07/05/2017     22:47                tools                                                                 
+-a----       07/05/2017     22:47         190753 System.Data.SQLite.EF6.1.0.105.0.nupkg                                
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\content
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:47                net40                                                                 
+d-----       07/05/2017     22:47                net45                                                                 
+d-----       07/05/2017     22:47                net451                                                                
+d-----       07/05/2017     22:47                net46                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\content\net40
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            568 app.config.install.xdt                                                
+-a----       08/04/2017     22:55            464 app.config.transform                                                  
+-a----       08/04/2017     22:55            568 web.config.install.xdt                                                
+-a----       08/04/2017     22:55            464 web.config.transform                                                  
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\content\net45
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            568 app.config.install.xdt                                                
+-a----       08/04/2017     22:55            464 app.config.transform                                                  
+-a----       08/04/2017     22:55            568 web.config.install.xdt                                                
+-a----       08/04/2017     22:55            464 web.config.transform                                                  
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\content\net451
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            568 app.config.install.xdt                                                
+-a----       08/04/2017     22:55            464 app.config.transform                                                  
+-a----       08/04/2017     22:55            568 web.config.install.xdt                                                
+-a----       08/04/2017     22:55            464 web.config.transform                                                  
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\content\net46
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            568 app.config.install.xdt                                                
+-a----       08/04/2017     22:55            464 app.config.transform                                                  
+-a----       08/04/2017     22:55            568 web.config.install.xdt                                                
+-a----       08/04/2017     22:55            464 web.config.transform                                                  
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\lib
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:47                net40                                                                 
+d-----       07/05/2017     22:47                net45                                                                 
+d-----       07/05/2017     22:47                net451                                                                
+d-----       07/05/2017     22:47                net46                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\lib\net40
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         186368 System.Data.SQLite.EF6.dll                                            
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\lib\net45
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         186368 System.Data.SQLite.EF6.dll                                            
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\lib\net451
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         186368 System.Data.SQLite.EF6.dll                                            
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\lib\net46
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         184320 System.Data.SQLite.EF6.dll                                            
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\tools
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:47                net40                                                                 
+d-----       07/05/2017     22:47                net45                                                                 
+d-----       07/05/2017     22:47                net451                                                                
+d-----       07/05/2017     22:47                net46                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\tools\net40
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            462 install.ps1                                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\tools\net45
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            462 install.ps1                                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\tools\net451
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            462 install.ps1                                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.EF6.1.0.105.0\tools\net46
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            462 install.ps1                                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:47                content                                                               
+d-----       07/05/2017     22:47                lib                                                                   
+-a----       07/05/2017     22:47         231407 System.Data.SQLite.Linq.1.0.105.0.nupkg                               
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0\content
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:47                net20                                                                 
+d-----       07/05/2017     22:47                net40                                                                 
+d-----       07/05/2017     22:47                net45                                                                 
+d-----       07/05/2017     22:47                net451                                                                
+d-----       07/05/2017     22:47                net46                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0\content\net20
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            398 app.config.transform                                                  
+-a----       08/04/2017     22:55            398 web.config.transform                                                  
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0\content\net40
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            398 app.config.transform                                                  
+-a----       08/04/2017     22:55            398 web.config.transform                                                  
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0\content\net45
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            398 app.config.transform                                                  
+-a----       08/04/2017     22:55            398 web.config.transform                                                  
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0\content\net451
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            398 app.config.transform                                                  
+-a----       08/04/2017     22:55            398 web.config.transform                                                  
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0\content\net46
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55            398 app.config.transform                                                  
+-a----       08/04/2017     22:55            398 web.config.transform                                                  
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0\lib
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       07/05/2017     22:47                net20                                                                 
+d-----       07/05/2017     22:47                net40                                                                 
+d-----       07/05/2017     22:47                net45                                                                 
+d-----       07/05/2017     22:47                net451                                                                
+d-----       07/05/2017     22:47                net46                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0\lib\net20
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         196608 System.Data.SQLite.Linq.dll                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0\lib\net40
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         186368 System.Data.SQLite.Linq.dll                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0\lib\net45
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         186368 System.Data.SQLite.Linq.dll                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0\lib\net451
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         186368 System.Data.SQLite.Linq.dll                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\System.Data.SQLite.Linq.1.0.105.0\lib\net46
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       08/04/2017     22:55         184320 System.Data.SQLite.Linq.dll                                           
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\WordExtractors
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       12/06/2017     23:09                src                                                                   
+-a----       31/05/2017     19:20            995 WordExtractors.sln                                                    
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\WordExtractors\src
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       31/05/2017     19:18                bin                                                                   
+d-----       24/06/2017     12:06                obj                                                                   
+-a----       31/05/2017     19:18           1519 AssemblyInfo.fs                                                       
+-a----       12/06/2017     21:43           5351 Extractors.fs                                                         
+-a----       12/06/2017     23:09            528 PathExpressions.fs                                                    
+-a----       12/06/2017     21:43           2488 RangeOperations.fs                                                    
+-a----       06/06/2017     22:47           3944 Test1.fsx                                                             
+-a----       10/06/2017     17:50           1826 TestRange.fsx                                                         
+-a----       12/06/2017     21:43            517 Utils.fs                                                              
+-a----       11/06/2017     23:26           4416 WordExtractors.fsproj                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\WordExtractors\src\bin
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       31/05/2017     19:18                Debug                                                                 
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\WordExtractors\src\obj
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       24/06/2017     12:06                Debug                                                                 
+-a----       24/06/2017     12:06           1049 WordExtractors.fsproj.ResolveComReference.cache                       
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\WordExtractors\src\obj\Debug
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       24/06/2017     12:06           1049 WordExtractors.fsproj.ResolveComReference.cache                       
+
+
+    Directory: E:\coding\fsharp\fsharp-snippets\_old
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----       04/06/2017     09:32           5032 ExtractorCombinators.fs                                               
+
+

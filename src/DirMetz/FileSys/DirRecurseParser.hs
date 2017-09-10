@@ -57,8 +57,10 @@ type Listing = [Block]
 pMode :: Parser String
 pMode = many1 (lower <|> char '-')
 
+
+
 pName :: Parser String
-pName = trimr <$> manyTill anyChar lineEnd
+pName = trimr <$> manyTill anyChar (try lineEnd)
 
 
 -- TODO maybe Data.Time.Format can help us from being UK biased...
@@ -85,11 +87,13 @@ pLastWriteTime =
 pSize :: Parser Size
 pSize = integer
 
-pDirectoryName :: Parser String
-pDirectoryName = indented (string "Directory:" *> ws1 *> pName)
 
-pHeadings :: Parser ()
-pHeadings = titles *> underlines
+-- | This is too simple - a long name is printed on the next line
+pDirectoryName :: Parser String
+pDirectoryName = string "Directory:" *> ws1 *> pName
+
+pHeaderLines :: Parser ()
+pHeaderLines = titles *> underlines
   where
     titles = sepStrings ["Mode", "LastWriteTime", "Length", "Name"]  
                *> ws *> endOfLine 
@@ -110,13 +114,14 @@ pElement = pMode >>= elementK
                                     <$> pLastWriteTime <*> pSize <*> pName
 
 pBlock :: Parser Block
-pBlock = Block  <$> indented pDirectoryName 
-                <*> (twice blankLine *> lineOf pHeadings *> many (lineOf pElement))
-                <*  threeTimes blankLine
+pBlock = Block  <$> indented pDirectoryName
+                <*> (twice blankLine *> pHeaderLines *> many pElement)
+                <*  twice blankLine
+  <?> "BLOCK"
 
 pListing :: Parser Listing
 pListing = twice emptyLine *> many1 pBlock
-
+        <?> "LISTING"
 
 -- Problem - output of dir -recurse seems to be in "UCS-2 LE BOM"
 -- and not UTF8, this is causing horrible errors...
@@ -139,7 +144,7 @@ sepStrings (s:ss)       = step s ss
   where
     step :: String -> [String] -> Parser [String]
     step s1 []           = (\x -> [x]) <$> string s1
-    step s1 (c:cs)       = (:) <$> (string s1 <* spaces) <*> step c cs
+    step s1 (c:cs)       = (:) <$> (string s1 <* ws1) <*> step c cs
 
 
 indented :: Parser a -> Parser a
@@ -147,22 +152,22 @@ indented p = ws1 *> p
 
 
 ws :: Parser () 
-ws = many (char ' ' <|> char '\t' <|> char '\r') *> return ()
+ws = many (char ' ' <|> char '\t') *> return ()
 
 ws1 :: Parser () 
-ws1 = many1 (char ' ' <|> char '\t' <|> char '\r') *> return ()
+ws1 = many1 (char ' ' <|> char '\t') *> return ()
 
 lineEnd :: Parser ()
-lineEnd = void endOfLine <|> winEnd <|> eof
+lineEnd = void endOfLine <|> eof
   where
     -- Something has gone wrong with CRLF detection...
-    winEnd = void $ (char (chr 160) <|> char (chr 9632))
+    --    winEnd = void $ (char (chr 160) <|> char (chr 9632))
 
 lineOf :: Parser a -> Parser a
 lineOf p = p <* lineEnd
 
 blankLine :: Parser ()
-blankLine = spaces *> lineEnd
+blankLine = ws *> lineEnd
 
 emptyLine :: Parser ()
 emptyLine = lineEnd
