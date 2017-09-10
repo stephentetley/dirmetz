@@ -31,6 +31,8 @@ import Data.Time                                -- pacake: Time
 
 import Data.Bifunctor
 import Data.Char
+import qualified Data.Map.Strict as MAP
+
 
 type Parser a        = ParsecT String () Identity a
 type Lexer           = P.GenTokenParser String () Identity
@@ -90,7 +92,9 @@ pSize = integer
 
 -- | This is too simple - a long name is printed on the next line
 pDirectoryName :: Parser String
-pDirectoryName = string "Directory:" *> ws1 *> pName
+pDirectoryName = string "Directory:" *> ws1 *> rest
+  where
+    rest = (lineEnd *> pName) <|> pName
 
 pHeaderLines :: Parser ()
 pHeaderLines = titles *> underlines
@@ -126,8 +130,14 @@ pListing = twice emptyLine *> many1 pBlock
 -- Problem - output of dir -recurse seems to be in "UCS-2 LE BOM"
 -- and not UTF8, this is causing horrible errors...
 --
-readListing :: FilePath -> IO (Either String Listing)
-readListing path = fmap (first show) $ parseFromFile pListing path
+readListing :: FilePath -> IO (Either String FileObj)
+readListing path = do 
+    ans <- parseFromFile pListing path
+    return $ case ans of 
+       Left err -> Left $ show err
+       Right ls -> case buildTopDown ls of
+             Nothing -> Left $ "Could not build root file object"
+             Just ans -> Right $ ans
 
 --------------------------------------------------------------------------------
 -- Lexer and utils
@@ -201,3 +211,40 @@ trimr = foldr step []
 isDir :: String -> Bool
 isDir ('d':_)   = True
 isDir _         = False
+
+--------------------------------------------------------------------------------
+-- Build from flat.
+
+
+buildTopDown :: Listing -> Maybe FileObj
+buildTopDown listing = fmap build1 $ getRoot listing
+  where
+    root_props = Properties { access_time = Nothing
+                            , modification_time = Nothing }
+    
+    -- Note - Root has no properties, so we can't make with makeRecur
+    --
+    build1 (Block name es) = let level1_kids = makeLevel1Kids listing
+                                 kids = map (makeRecur level1_kids) es
+                             in Folder name root_props kids
+
+-- | Root is always first
+getRoot :: Listing -> Maybe Block
+getRoot (x:_) = Just x
+getRoot []    = Nothing
+
+
+makeRecur :: Level1Kids -> Element -> FileObj
+makeRecur _     obj@(File {})             = obj
+makeRecur store     (Folder name props _) = 
+   let kids1 = MAP.findWithDefault [] name store
+       kids2 = map (makeRecur store) kids1
+   in Folder name props kids2
+
+
+type Level1Kids = MAP.Map Name [FileObj]
+
+makeLevel1Kids :: Listing -> Level1Kids
+makeLevel1Kids = foldr step MAP.empty
+  where
+    step (Block name es) m = MAP.insert name es m

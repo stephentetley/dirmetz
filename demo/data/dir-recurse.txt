@@ -364,7 +364,8 @@ Mode                LastWriteTime         Length Name
 -a----       10/04/2017     23:32         122921 FSharp.Data.xml                                                       
 
 
-    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Data.2.3.3\lib\portable-net45+netcore45+wpa81+wp8
+    Directory: 
+    E:\coding\fsharp\fsharp-snippets\sketch\packages\FSharp.Data.2.3.3\lib\portable-net45+netcore45+wpa81+wp8
 
 
 Mode                LastWriteTime         Length Name                                                                  
@@ -524,7 +525,7 @@ Mode                LastWriteTime         Length Name
 ----                -------------         ------ ----                                                                  
 -a----       02/04/2017     17:46         457216 Newtonsoft.Json.dll                                                   
 -a----       02/04/2017     17:46         515871 Newtonsoft.Json.xml                                                   
-	
+
 
     Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\net40
 
@@ -562,7 +563,8 @@ Mode                LastWriteTime         Length Name
 -a----       02/04/2017     17:46         660397 Newtonsoft.Json.xml                                                   
 
 
-    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\portable-net40+sl5+win8+wpa81+wp8
+    Directory: 
+    E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\portable-net40+sl5+win8+wpa81+wp8
 
 
 Mode                LastWriteTime         Length Name                                                                  
@@ -571,7 +573,8 @@ Mode                LastWriteTime         Length Name
 -a----       02/04/2017     17:46         489320 Newtonsoft.Json.xml                                                   
 
 
-    Directory: E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\portable-net45+win8+wpa81+wp8
+    Directory: 
+    E:\coding\fsharp\fsharp-snippets\sketch\packages\Newtonsoft.Json.10.0.2\lib\portable-net45+win8+wpa81+wp8
 
 
 Mode                LastWriteTime         Length Name                                                                  
