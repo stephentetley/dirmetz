@@ -225,7 +225,7 @@ buildTopDown listing = fmap build1 $ getRoot listing
     -- Note - Root has no properties, so we can't make with makeRecur
     --
     build1 (Block name es) = let level1_kids = makeLevel1Kids listing
-                                 kids = map (makeRecur level1_kids) es
+                                 kids = map (makeRecur level1_kids name) es
                              in Folder name root_props kids
 
 -- | Root is always first
@@ -234,12 +234,13 @@ getRoot (x:_) = Just x
 getRoot []    = Nothing
 
 
-makeRecur :: Level1Kids -> Element -> FileObj
-makeRecur _     obj@(File {})             = obj
-makeRecur store     (Folder name props _) = 
-   let kids1 = MAP.findWithDefault [] name store
-       kids2 = map (makeRecur store) kids1
-   in Folder name props kids2
+makeRecur :: Level1Kids -> Name -> Element -> FileObj
+makeRecur _     _       obj@(File {})             = obj
+makeRecur store parent      (Folder name2 props _) = 
+   let fullname = parent ++ ('\\':name2)
+       kids1    = MAP.findWithDefault [] fullname store
+       kids2    = map (makeRecur store fullname) kids1
+   in Folder name2 props kids2
 
 
 type Level1Kids = MAP.Map Name [FileObj]
