@@ -84,3 +84,24 @@ populateProperties path = do
                         , modification_time = Just m
                         }
 
+--------------------------------------------------------------------------------
+-- Display
+
+-- The simplest useful rendering is a topdown list of paths of 
+-- files and directories, one item per line, printed alphabetically.
+--
+
+display :: FileObj -> String
+display (File name _ _)  = name               -- ideally we should see a root dir not a file
+display (Folder name _ kids) = unlines $ name : concatMap (step "") kids
+  where
+    step :: String -> FileObj -> [String]
+    step path (File s _ _) = [catPath path s]
+    step path (Folder s _ xs) = let path1 = catPath path s
+                                in path1 : concatMap (step path1) xs
+  
+
+catPath :: String -> String -> String
+catPath s1 s2 | null s1 = s2
+              | otherwise = s1 ++  ('\\':s2)
+

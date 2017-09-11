@@ -90,7 +90,8 @@ pSize :: Parser Size
 pSize = integer
 
 
--- | This is too simple - a long name is printed on the next line
+-- | Note - a long name is printed on the next line.
+--
 pDirectoryName :: Parser String
 pDirectoryName = string "Directory:" *> ws1 *> rest
   where
@@ -127,6 +128,7 @@ pListing :: Parser Listing
 pListing = twice emptyLine *> many1 pBlock
         <?> "LISTING"
 
+
 -- Problem - output of dir -recurse seems to be in "UCS-2 LE BOM"
 -- and not UTF8, this is causing horrible errors...
 --
@@ -137,7 +139,7 @@ readListing path = do
        Left err -> Left $ show err
        Right ls -> case buildTopDown ls of
              Nothing -> Left $ "Could not build root file object"
-             Just ans -> Right $ ans
+             Just a -> Right $ a
 
 --------------------------------------------------------------------------------
 -- Lexer and utils

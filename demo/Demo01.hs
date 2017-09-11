@@ -5,7 +5,7 @@ module Demo01 where
 
 import DirMetz.FileSys.Base
 import DirMetz.FileSys.DirRecurseParser
-import DirMetz.FileSys.Kure
+import DirMetz.FileSys.Kure hiding ( blankLine )
 import DirMetz.FileSys.Metrics1
 
 
@@ -58,6 +58,10 @@ demo06 = getCurrentDirectory >>= populate >>= \fo -> case subsystems fo of
 
 demo07 = readListing "./demo/data/dir-recurse.txt"
 
+
+demo08 :: IO ()
+demo08 = getCurrentDirectory >>= populate >>= \fo -> putStrLn (display fo) 
+
 -- getModificationTime returns UTCTime 
 type Timestamp = UTCTime
 
@@ -76,8 +80,16 @@ temp04 = testP pUTCTime "29/05/2017     15:27      "
 temp05 = testP lineEnd ""
 temp06 = testIOP (lineEnd *> lineEnd *> pDirectoryName) "./demo/data/dir-recurse.txt"
 
-temp07 = testP (lineEnd *> lineEnd *> pDirectoryName) $ 
+temp07 = testP ((,) <$> dname <*> headers) $ 
        unlines $ [ ""
                  , ""
                  , "    Directory: E:\\coding\\fsharp\\fsharp-snippets"
+                 , ""
+                 , ""
+                 , "Mode                LastWriteTime         Length Name                                                                  "
+                 , "----                -------------         ------ ----                                                                  "
+                  ,""
                  ]
+  where
+    dname = emptyLine *> emptyLine *> indented pDirectoryName
+    headers = emptyLine *> emptyLine *> pHeaderLines
