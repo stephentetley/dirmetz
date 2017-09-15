@@ -32,6 +32,10 @@ hoursMinutesSecondsToDiffTime h m s = secondsToDiffTime $ s + 60 * (fromIntegral
 type Name = String
 type Size = Integer
 
+-- Trees have a pendant which stores different information
+data FileStore = FileStore FilePath [FileObj]
+  deriving (Show)
+
 data FileObj = File   Name Properties Size
              | Folder Name Properties [FileObj]
   deriving (Show)
@@ -56,6 +60,28 @@ data Properties = Properties
 
 --------------------------------------------------------------------------------
 -- Populate 
+
+populateFS :: FilePath -> IO FileStore
+populateFS root = FileStore root <$> children root
+  where
+    listDirectoryLong :: FilePath -> IO [FilePath]
+    listDirectoryLong path = map (path </>) <$> listDirectory path
+
+    children path = do { kids  <- filterM doesDirectoryExist =<< listDirectoryLong path 
+                       ; kids' <- mapM folder1 kids
+                       ; files <- files1 path
+                       ; return $ kids' ++ files }
+
+    folder1 path  = do { props <- populateProperties path
+                       ; kids  <- children path
+                       ; return $ Folder (takeFileName path) props kids }
+                       
+    files1 path = do { xs <- filterM doesFileExist =<< listDirectoryLong path 
+                     ; forM xs (\x -> do { props <- populateProperties x
+                                         ; sz <- getFileSize x
+                                         ; return $ File (takeFileName x) props sz }) 
+                     }
+
 
 populate :: FilePath -> IO FileObj
 populate = foldersR
@@ -90,6 +116,9 @@ populateProperties path = do
 -- The simplest useful rendering is a topdown list of paths of 
 -- files and directories, one item per line, printed alphabetically.
 --
+
+displayFS :: FileStore -> String
+displayFS (FileStore path kids) = unlines $ path : map display kids
 
 display :: FileObj -> String
 display (File name _ _)  = name               -- ideally we should see a root dir not a file

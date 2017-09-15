@@ -62,6 +62,10 @@ demo07 = readListing "./demo/data/dir-recurse.txt"
 demo08 :: IO ()
 demo08 = getCurrentDirectory >>= populate >>= \fo -> putStrLn (display fo) 
 
+demo09 :: IO ()
+demo09 = getCurrentDirectory >>= populateFS >>= \fo ->  putStrLn (displayFS fo) 
+
+
 -- getModificationTime returns UTCTime 
 type Timestamp = UTCTime
 
