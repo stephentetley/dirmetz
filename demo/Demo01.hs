@@ -59,11 +59,11 @@ demo06 = getCurrentDirectory >>= populate >>= \fo -> case subsystems fo of
 demo07 = readListing "./demo/data/dir-recurse.txt"
 
 
-demo08 :: IO ()
-demo08 = getCurrentDirectory >>= populate >>= \fo -> putStrLn (display fo) 
+-- demo08 :: IO ()
+-- demo08 = getCurrentDirectory >>= populate >>= \fo -> putStrLn (display fo) 
 
-demo09 :: IO ()
-demo09 = getCurrentDirectory >>= populateFS >>= \fo ->  putStrLn (displayFS fo) 
+demo08 :: IO ()
+demo08 = getCurrentDirectory >>= populateFS >>= \fo ->  putStrLn (display fo) 
 
 
 -- getModificationTime returns UTCTime 

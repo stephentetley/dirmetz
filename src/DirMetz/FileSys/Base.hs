@@ -21,6 +21,7 @@ module DirMetz.FileSys.Base where
 import Data.Time                        -- package: time
 
 import Control.Monad
+import Data.List ( foldl', sort )
 import System.Directory
 import System.FilePath
 
@@ -34,11 +35,11 @@ type Size = Integer
 
 -- Trees have a pendant which stores different information
 data FileStore = FileStore FilePath [FileObj]
-  deriving (Show)
+  deriving (Eq,Ord,Show)
 
-data FileObj = File   Name Properties Size
-             | Folder Name Properties [FileObj]
-  deriving (Show)
+data FileObj = Folder Name Properties [FileObj]
+             | File   Name Properties Size
+  deriving (Eq,Ord,Show)
 
 -- Note - adding properties is onerous for dir listings. 
 --
@@ -53,7 +54,7 @@ data Properties = Properties
     { access_time       :: Maybe UTCTime
     , modification_time :: Maybe UTCTime
     }
-  deriving (Show)
+  deriving (Eq,Ord,Show)
 
 -- Other possible file stats are premissions...
 
@@ -117,20 +118,28 @@ populateProperties path = do
 -- files and directories, one item per line, printed alphabetically.
 --
 
-displayFS :: FileStore -> String
-displayFS (FileStore path kids) = unlines $ path : map display kids
+-- Note we need to sort, currently the sort order favours directories and
+-- is case sensitive
 
-display :: FileObj -> String
-display (File name _ _)  = name               -- ideally we should see a root dir not a file
-display (Folder name _ kids) = unlines $ name : concatMap (step "") kids
+display :: FileStore -> String
+display (FileStore path kids) = 
+    ($ "") $ foldl' (\ac fo -> ac . display1 fo) (showString path) (sort kids)
+
+
+display1 :: FileObj -> ShowS
+display1 = step id ""
   where
-    step :: String -> FileObj -> [String]
-    step path (File s _ _) = [catPath path s]
-    step path (Folder s _ xs) = let path1 = catPath path s
-                                in path1 : concatMap (step path1) xs
-  
+    step ac path (File s _ _)    = ac `appendLine` (catPath path s)
+
+    step ac path (Folder s _ xs) = let path1 = catPath path s
+                                       ac1   = ac `appendLine` path1
+                                   in foldl' (\acc fo -> step acc path1 fo) ac1 (sort xs)
+
 
 catPath :: String -> String -> String
 catPath s1 s2 | null s1 = s2
               | otherwise = s1 ++  ('\\':s2)
 
+
+appendLine :: ShowS -> String -> ShowS
+appendLine f s = let s1 = ('\n':s) in f . showString s1
