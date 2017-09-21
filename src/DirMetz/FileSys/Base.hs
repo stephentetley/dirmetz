@@ -17,11 +17,12 @@
 
 module DirMetz.FileSys.Base where
 
+import qualified Data.CaseInsensitive   as CI            -- package: case-insensitive
 
 import Data.Time                        -- package: time
 
 import Control.Monad
-import Data.List ( foldl', sort )
+import Data.List ( foldl', sortBy )
 import System.Directory
 import System.FilePath
 
@@ -57,6 +58,15 @@ data Properties = Properties
   deriving (Eq,Ord,Show)
 
 -- Other possible file stats are premissions...
+
+
+nameOf :: FileObj -> String
+nameOf (Folder s _ _)   = s
+nameOf (File s _ _)     = s
+
+neutralOrd :: FileObj -> FileObj -> Ordering
+neutralOrd o1 o2 = CI.mk (nameOf o1) `compare` CI.mk (nameOf o2)
+
 
 
 --------------------------------------------------------------------------------
@@ -118,12 +128,12 @@ populateProperties path = do
 -- files and directories, one item per line, printed alphabetically.
 --
 
--- Note we need to sort, currently the sort order favours directories and
--- is case sensitive
+-- Note we need to sort, the sort order is neutral 
+-- (does not favour files or directories, is case insenstive)
 
 display :: FileStore -> String
 display (FileStore path kids) = 
-    ($ "") $ foldl' (\ac fo -> ac . display1 fo) (showString path) (sort kids)
+    ($ "") $ foldl' (\ac fo -> ac . display1 fo) (showString path) (sortBy neutralOrd kids)
 
 
 display1 :: FileObj -> ShowS
@@ -133,7 +143,7 @@ display1 = step id ""
 
     step ac path (Folder s _ xs) = let path1 = catPath path s
                                        ac1   = ac `appendLine` path1
-                                   in foldl' (\acc fo -> step acc path1 fo) ac1 (sort xs)
+                                   in foldl' (\acc fo -> step acc path1 fo) ac1 (sortBy neutralOrd xs)
 
 
 catPath :: String -> String -> String
