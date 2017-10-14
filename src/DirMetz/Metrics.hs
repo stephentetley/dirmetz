@@ -22,15 +22,20 @@ import Data.Time
 
 
 data Metric a = Metric
-    { metric_name :: String
-    , metric_desription :: a
-    , metric_result :: a
+    { metric_name       :: String
+    , metric_desription :: String
+    , metric_result     :: a
     }
   deriving (Eq,Ord,Show)
 
 
--- labelling Metrics seems like a good idea
+type FormatedMetric = Metric String
 
+
+
+
+-- labelling Metrics seems like a good idea
+-- This is old
 data Labelled a = Labelled !String !a 
   deriving (Eq,Ord,Show,Read)
 

@@ -44,6 +44,20 @@ type Maxi = Max Int64
 maxi :: Integral a => a -> Maxi
 maxi = Max . fromIntegral
 
+
+-- TODO - how (where?) do we accommodate metrics failing?
+--
+unsafeExtract :: a -> Either b a -> a
+unsafeExtract a (Left _)  = a
+unsafeExtract _ (Right a) = a
+
+-- cf SDF Metz 
+-- a calc__ function to run the traversal and return 
+calcLargestFile :: FileObj -> Integer
+calcLargestFile = 
+    unsafeExtract 0 . runKureM Right Left . applyT largestFile1 zeroContext
+
+
 largestFile :: FileObj -> Either String Integer
 largestFile = runKureM Right Left . applyT largestFile1 zeroContext
 
@@ -54,6 +68,8 @@ largestFile1 = fmap (fromIntegral . getMax) $ crushtdT $
     do File _ _ sz <- idR
        return $ maxi sz
 
+
+-- Note - labelling no longer seems germane to the idea of metrics...
 
 -- Labelling means we can identify the largest node alongside its size.
 
