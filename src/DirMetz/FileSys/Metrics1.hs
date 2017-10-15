@@ -57,23 +57,6 @@ largestFile1 = fmap (fromIntegral . getMax) $ crushtdT $
        return $ maxi sz
 
 
--- Note - labelling no longer seems germane to the idea of metrics...
-
--- Labelling means we can identify the largest node alongside its size.
-
-largestFileNamed :: FileObj -> Either String (String,Integer)
-largestFileNamed = runKureM Right Left . applyT largestFileNamed1 zeroContext
-
-
--- max monoid
-largestFileNamed1 :: TransformE FileObj (String,Integer)
-largestFileNamed1 = fmap get $ crushtdT $ 
-    do File s _ sz <- idR
-       return $ LargestInteger $ Labelled s sz
-  where
-    get (LargestInteger (Labelled s i)) = (s,i)
-
-
 -- Counting 
 -- Counting doesn't seem to need labelling unless we label the 
 -- metric itself, although that seems unnecessary at the element 
@@ -81,8 +64,8 @@ largestFileNamed1 = fmap get $ crushtdT $
 
 
 
-countFiles :: FileObj -> Either String Integer
-countFiles = runKureM Right Left . applyT countFiles1 zeroContext
+calcCountFiles :: FileObj -> Result Integer
+calcCountFiles = runKureResultM . applyT countFiles1 zeroContext
 
 
 -- sum monoid
@@ -91,8 +74,10 @@ countFiles1 = fmap getSum $ crushtdT $
     do File {} <- idR
        return 1
 
-countFolders :: FileObj -> Either String Integer
-countFolders = runKureM Right Left . applyT countFolders1 zeroContext
+
+
+calcCountFolders :: FileObj -> Result Integer
+calcCountFolders = runKureResultM . applyT countFolders1 zeroContext
 
 
 -- Note - don't count the root folder (so don't use crushtdT)
@@ -113,8 +98,8 @@ countFolders1 = fmap getSum go_kids
 -- deepest is not a straight-forward topdown traversal
 
 
-maxDepth :: FileObj -> Either String Integer
-maxDepth = runKureM Right Left . applyT maxDepth1 zeroContext
+calcMaxDepth :: FileObj -> Result Integer
+calcMaxDepth = runKureResultM . applyT maxDepth1 zeroContext
 
 maxDepth1 :: TransformE FileObj Integer
 maxDepth1 = fmap (fromIntegral . getMax) $ allT $ folder_depth <+ file_depth 
@@ -126,8 +111,11 @@ maxDepth1 = fmap (fromIntegral . getMax) $ allT $ folder_depth <+ file_depth
                     return $ maxi (1::Integer)
 
 
--- Histogram
 
+
+-- Histogram
+-- TODO - not sure this is a "metric" rather than a "query".
+--
 type Histo = Map.Map String Integer
 
 subsystems :: FileObj -> Either String Histo

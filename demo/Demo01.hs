@@ -35,22 +35,19 @@ demo03 = getCurrentDirectory >>= populate >>= \fo -> case calcLargestFile fo of
     Ans ans -> print ans
     Err err -> error err
 
-demo03a :: IO ()
-demo03a = getCurrentDirectory >>= populate >>= \fo -> case largestFileNamed fo of
-    Right ans -> print ans
-    Left err -> error err
+
 
 demo04 :: IO ()
-demo04 = getCurrentDirectory >>= populate >>= \fo -> case (countFiles fo, countFolders fo) of
-    (Right i1, Right i2) -> print $ (i1,i2)
-    (Left err, _) -> error err
-    (_, Left err) -> error err
+demo04 = getCurrentDirectory >>= populate >>= \fo -> case (calcCountFiles fo, calcCountFolders fo) of
+    (Ans i1, Ans i2) -> print $ (i1,i2)
+    (Err err, _) -> error err
+    (_, Err err) -> error err
 
 
 demo05 :: IO ()
-demo05 = getCurrentDirectory >>= populate >>= \fo -> case maxDepth fo of
-    Right ans -> print ans
-    Left err -> error err
+demo05 = getCurrentDirectory >>= populate >>= \fo -> case calcMaxDepth fo of
+    Ans ans -> print ans
+    Err err -> error err
 
 demo06 :: IO ()
 demo06 = getCurrentDirectory >>= populate >>= \fo -> case subsystems fo of
