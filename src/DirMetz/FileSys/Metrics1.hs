@@ -27,39 +27,27 @@ module DirMetz.FileSys.Metrics1 where
 
 import DirMetz.FileSys.Base
 import DirMetz.FileSys.Kure
-import DirMetz.Metrics
+
+import MetricsLib.Base
 
 
 import Language.KURE                    -- package: kure
 
 
-import Data.Int
 import qualified Data.Map as Map
 import Data.Semigroup hiding ( (<>) )
 
 
 
-type Maxi = Max Int64
-
-maxi :: Integral a => a -> Maxi
-maxi = Max . fromIntegral
 
 
--- TODO - how (where?) do we accommodate metrics failing?
---
-unsafeExtract :: a -> Either b a -> a
-unsafeExtract a (Left _)  = a
-unsafeExtract _ (Right a) = a
 
 -- cf SDF Metz 
 -- a calc__ function to run the traversal and return 
-calcLargestFile :: FileObj -> Integer
-calcLargestFile = 
-    unsafeExtract 0 . runKureM Right Left . applyT largestFile1 zeroContext
+calcLargestFile :: FileObj -> Result Integer
+calcLargestFile = runKureResultM. applyT largestFile1 zeroContext
 
 
-largestFile :: FileObj -> Either String Integer
-largestFile = runKureM Right Left . applyT largestFile1 zeroContext
 
 
 -- max monoid

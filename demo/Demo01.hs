@@ -3,11 +3,13 @@
 
 module Demo01 where
 
+
 import DirMetz.FileSys.Base
 import DirMetz.FileSys.DirRecurseParser
 import DirMetz.FileSys.Kure hiding ( blankLine )
 import DirMetz.FileSys.Metrics1
 
+import MetricsLib.Base
 
 -- import Language.KURE                    -- package: kure
 
@@ -29,9 +31,9 @@ demo02 = getCurrentDirectory >>= populate >>= \fo -> case prettyPrint fo of
 
 
 demo03 :: IO ()
-demo03 = getCurrentDirectory >>= populate >>= \fo -> case largestFile fo of
-    Right ans -> print ans
-    Left err -> error err
+demo03 = getCurrentDirectory >>= populate >>= \fo -> case calcLargestFile fo of
+    Ans ans -> print ans
+    Err err -> error err
 
 demo03a :: IO ()
 demo03a = getCurrentDirectory >>= populate >>= \fo -> case largestFileNamed fo of

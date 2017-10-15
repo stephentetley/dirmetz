@@ -2,7 +2,7 @@
 
 --------------------------------------------------------------------------------
 -- |
--- Module      :  DirMetz.Metrics
+-- Module      :  MetricsLib.Base
 -- Copyright   :  (c) Stephen Tetley 2017
 -- License     :  BSD3
 --
@@ -15,21 +15,49 @@
 --------------------------------------------------------------------------------
 
 
-module DirMetz.Metrics where
+module MetricsLib.Base where
 
+import Language.KURE                    -- package: kure
+
+import Data.Int
 import Data.Semigroup
 import Data.Time
+
+
+type ErrMsg = String
+
+data Result a = Ans a
+              | Err ErrMsg
+  deriving (Eq,Ord,Show)
+
+-- Push metrics failing up to the final answer...
+--
+toResult :: Either String a -> Result a
+toResult (Left err) = Err err
+toResult (Right a)  = Ans a
+
+runKureResultM :: KureM a -> Result a
+runKureResultM = toResult . runKureM Right Left
 
 
 data Metric a = Metric
     { metric_name       :: String
     , metric_desription :: String
-    , metric_result     :: a
+    , metric_result     :: Result a
     }
   deriving (Eq,Ord,Show)
 
 
 type FormatedMetric = Metric String
+
+
+
+type Maxi = Max Int64
+
+maxi :: Integral a => a -> Maxi
+maxi = Max . fromIntegral
+
+
 
 
 

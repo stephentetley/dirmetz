@@ -40,7 +40,7 @@ library
     DirMetz.FileSys.DirRecurseParser,
     DirMetz.FileSys.Kure,
     DirMetz.FileSys.Metrics1
-    DirMetz.Metrics
+    MetricsLib.Base
     
 
   other-modules:
