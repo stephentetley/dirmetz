@@ -33,6 +33,9 @@ import MetricsLib.Base
 
 import Language.KURE                    -- package: kure
 
+import Data.Time                        -- package: time
+
+
 
 import qualified Data.Map as Map
 import Data.Semigroup hiding ( (<>) )
@@ -55,6 +58,14 @@ largestFile1 :: TransformE FileObj Integer
 largestFile1 = fmap (fromIntegral . getMax) $ crushtdT $ 
     do File _ _ sz <- idR
        return $ maxi sz
+
+
+-- max monoid -- TODO turn Maybe into a failing strategy...
+latestFile1 :: TransformE FileObj (Maybe UTCTime)
+latestFile1 = fmap getLatest $ crushtdT $ 
+    do File _ props _ <- idR
+       return $ Latest $ modification_time props
+
 
 
 -- Counting 

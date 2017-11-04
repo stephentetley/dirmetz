@@ -87,12 +87,33 @@ instance Monoid SmallestInteger where
       | otherwise       = a
 
 
-{-
-newtype Latest = Latest { getLatest :: Labelled UTCTime }
-  deriving (Eq,Ord)
+
+maybeMappendBy :: (a -> a -> a) -> Maybe a -> Maybe a -> Maybe a
+maybeMappendBy fn = step
+  where
+    step Nothing  b         = b
+    step a        Nothing   = a
+    step (Just a) (Just b)  = Just $ fn a b
+
+newtype Latest = Latest { getLatest :: Maybe UTCTime }
+  deriving (Eq,Ord,Show,Read)
 
 instance Monoid Latest where
-  mempty = Latest $ Labelled "" undefined 
-  a@(Latest i1) `mappend` b@(Latest i2) = if valueOf i1 >= valueOf i2 then a else b
--}
+  mempty = Latest Nothing
+  Latest a `mappend` Latest b = Latest $ maybeMappendBy fn a b
+    where
+      fn d1 d2 = if d1 >= d2 then d1 else d2
+
+
+
+newtype Earliest = Earliest { getEarliest :: Maybe UTCTime }
+  deriving (Eq,Ord,Show,Read)
+
+instance Monoid Earliest where
+  mempty = Earliest Nothing
+  Earliest a `mappend` Earliest b = Earliest $ maybeMappendBy fn a b
+    where
+      fn d1 d2 = if d1 >= d2 then d1 else d2
+
+
 
