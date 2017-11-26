@@ -1,3 +1,4 @@
+{-# LANGUAGE LambdaCase                 #-}
 {-# OPTIONS -Wall #-}
 
 --------------------------------------------------------------------------------
@@ -94,6 +95,40 @@ maybeMappendBy fn = step
     step Nothing  b         = b
     step a        Nothing   = a
     step (Just a) (Just b)  = Just $ fn a b
+
+swapMaybeT :: Monad m => String -> Transform c m a (Maybe b) -> Transform c m a b
+swapMaybeT errmsg ma  = transform $ \c a -> applyT ma c a >>= post
+  where
+    post (Just a) = return a
+    post Nothing  = fail errmsg
+
+
+{-
+
+-- Workings out to get swapMaybeT
+
+listFirst1 :: Transform c Maybe [b] b
+listFirst1 = transform $ \c a -> case a of
+  [] -> Nothing
+  (a:_) -> Just a
+
+listFirst2 :: Monad m => Transform c m [b] (Maybe b)
+listFirst2 = transform $ \c a -> case a of
+  [] -> return $ Nothing
+  (a:_) -> return $ Just a
+
+swapMaybeR1 :: Monad m => String -> Rewrite c m a -> Rewrite c m a
+swapMaybeR1 errmsg ma  = rewrite $ \c a -> post (applyR ma c a)
+  where
+    post _ = fail errmsg
+
+
+
+swap1 :: Rewrite c m a -> Rewrite c m a
+swap1 ma  = rewrite $ \c a -> post (applyR ma c a)
+  where
+    post a = a
+-}       
 
 newtype Latest = Latest { getLatest :: Maybe UTCTime }
   deriving (Eq,Ord,Show,Read)
