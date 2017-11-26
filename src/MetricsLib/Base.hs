@@ -103,33 +103,6 @@ swapMaybeT errmsg ma  = transform $ \c a -> applyT ma c a >>= post
     post Nothing  = fail errmsg
 
 
-{-
-
--- Workings out to get swapMaybeT
-
-listFirst1 :: Transform c Maybe [b] b
-listFirst1 = transform $ \c a -> case a of
-  [] -> Nothing
-  (a:_) -> Just a
-
-listFirst2 :: Monad m => Transform c m [b] (Maybe b)
-listFirst2 = transform $ \c a -> case a of
-  [] -> return $ Nothing
-  (a:_) -> return $ Just a
-
-swapMaybeR1 :: Monad m => String -> Rewrite c m a -> Rewrite c m a
-swapMaybeR1 errmsg ma  = rewrite $ \c a -> post (applyR ma c a)
-  where
-    post _ = fail errmsg
-
-
-
-swap1 :: Rewrite c m a -> Rewrite c m a
-swap1 ma  = rewrite $ \c a -> post (applyR ma c a)
-  where
-    post a = a
--}       
-
 newtype Latest = Latest { getLatest :: Maybe UTCTime }
   deriving (Eq,Ord,Show,Read)
 

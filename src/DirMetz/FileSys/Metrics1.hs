@@ -48,7 +48,7 @@ import Data.Semigroup hiding ( (<>) )
 -- cf SDF Metz 
 -- a calc__ function to run the traversal and return 
 calcLargestFile :: FileObj -> Result Integer
-calcLargestFile = runKureResultM. applyT largestFile1 zeroContext
+calcLargestFile = runKureResultM . applyT largestFile1 zeroContext
 
 
 
@@ -60,12 +60,26 @@ largestFile1 = fmap (fromIntegral . getMax) $ crushtdT $
        return $ maxi sz
 
 
--- max monoid -- TODO turn Maybe into a failing strategy...
-latestFile1 :: TransformE FileObj (Maybe UTCTime)
-latestFile1 = fmap getLatest $ crushtdT $ 
+calcLatestFile :: FileObj -> Result UTCTime
+calcLatestFile = runKureResultM . applyT latestFile1 zeroContext
+  
+
+
+-- Latest monoid -- Maybe inside Latest becomes a failing strategy...
+latestFile1 :: TransformE FileObj UTCTime
+latestFile1 = swapMaybeT "empty Filesys" $ fmap getLatest $ crushtdT $ 
     do File _ props _ <- idR
        return $ Latest $ modification_time props
 
+
+
+calcEarliestFile :: FileObj -> Result UTCTime
+calcEarliestFile = runKureResultM . applyT earliestFile1 zeroContext
+
+earliestFile1 :: TransformE FileObj UTCTime
+earliestFile1 = swapMaybeT "empty Filesys" $ fmap getEarliest $ crushtdT $ 
+    do File _ props _ <- idR
+       return $ Earliest $ modification_time props
 
 
 -- Counting 
