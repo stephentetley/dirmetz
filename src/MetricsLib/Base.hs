@@ -70,7 +70,7 @@ newtype LargestInteger = LargestInteger { getLargestInteger :: Max Integer }
   deriving (Eq,Ord,Show,Read)
 
 instance Monoid LargestInteger where
-  mempty = LargestInteger 0 
+  mempty = LargestInteger (-1)
   LargestInteger i1 `mappend` LargestInteger i2 = LargestInteger $ i1 <> i2
 
 
@@ -78,7 +78,9 @@ instance Monoid LargestInteger where
 newtype SmallestInteger = SmallestInteger { getSmallestInteger :: Min Integer }
   deriving (Eq,Ord,Show,Read)
 
--- Make a semigroupo a monoid with a sentinel (-1).
+
+
+-- Make a semigroup a monoid with a sentinel (-1).
 --
 instance Monoid SmallestInteger where
   mempty = SmallestInteger (-1) 
@@ -101,6 +103,15 @@ swapMaybeT errmsg ma  = transform $ \c a -> applyT ma c a >>= post
   where
     post (Just a) = return a
     post Nothing  = fail errmsg
+
+
+-- This is swapMaybeT for numeric types where a negative number 
+-- is the failure sentinel.
+positiveT :: (Monad m, Num b, Ord b) => String -> Transform c m a b -> Transform c m a b
+positiveT errmsg ma  = transform $ \c a -> applyT ma c a >>= post
+  where
+    post a | a >= 0    = return a
+           | otherwise = fail errmsg
 
 
 newtype Latest = Latest { getLatest :: Maybe UTCTime }

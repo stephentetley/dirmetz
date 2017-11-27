@@ -55,9 +55,12 @@ calcLargestFile = runKureResultM . applyT largestFile1 zeroContext
 
 -- max monoid
 largestFile1 :: TransformE FileObj Integer
-largestFile1 = fmap (fromIntegral . getMax) $ crushtdT $ 
+largestFile1 = positiveT "empty Filesys" $ fmap (fromIntegral . getMax) $ crushtdT $ 
     do File _ _ sz <- idR
        return $ maxi sz
+
+
+-- Latest file
 
 
 calcLatestFile :: FileObj -> Result UTCTime
@@ -139,7 +142,7 @@ maxDepth1 = fmap (fromIntegral . getMax) $ allT $ folder_depth <+ file_depth
 
 
 -- Histogram
--- TODO - not sure this is a "metric" rather than a "query".
+-- Design issue - histograms are more "queries" than "metrics".
 --
 type Histo = Map.Map String Integer
 
