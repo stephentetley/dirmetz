@@ -43,6 +43,12 @@ import Data.Semigroup hiding ( (<>) )
 
 
 
+-- 
+fileSize1 :: TransformE FileObj (SizeMetric Integer)
+fileSize1 = swapMaybeT "empty Filesys" $ fmap ((fmap measure1ToMetric) . getSizeMeasure) $ crushtdT $
+    do File _ _ sz <- idR
+       return $ sizeMeasure $ fromIntegral sz
+
 
 
 -- cf SDF Metz 
@@ -83,6 +89,9 @@ earliestFile1 :: TransformE FileObj UTCTime
 earliestFile1 = swapMaybeT "empty Filesys" $ fmap getEarliest $ crushtdT $ 
     do File _ props _ <- idR
        return $ Earliest $ modification_time props
+
+
+
 
 
 -- Counting 

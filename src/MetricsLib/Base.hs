@@ -49,7 +49,14 @@ data Metric a = Metric
   deriving (Eq,Ord,Show)
 
 
-type FormatedMetric = Metric String
+-- Uminho metrics use Strings and Read to hide the representation of metrics
+-- On groups, Uminho metrics calculates aggregate min, max and ave.
+-- However I don't know that this is a design I want to follow - 
+-- min, max, ave seem relevant to size metrics
+
+type FormattedMetric = Metric String
+
+data GroupMetric = GroupMetric String [FormattedMetric]
 
 
 
@@ -134,5 +141,66 @@ instance Monoid Earliest where
     where
       fn d1 d2 = if d1 >= d2 then d1 else d2
 
+
+
+--------------------------------------------------------------------------------
+-- Size
+
+-- Size can be a multi-metric that tracks min, max and average.
+-- This avoids repeated traversals for largest, smallest, average.
+
+data SizeMetric a = SizeMetric 
+    { size_minimum      :: !a
+    , size_maximum      :: !a
+    , size_average      :: !Double
+    }
+  deriving (Eq,Show,Read)
+ 
+
+measure1ToMetric :: Real a => SizeMeasure1 a -> SizeMetric a
+measure1ToMetric sm = 
+    SizeMetric { size_minimum = getMin $ size_min sm
+               , size_maximum = getMax $ size_max sm
+               , size_average = realToFrac (size_sum sm) / realToFrac (size_count sm) 
+               }
+
+
+
+newtype SizeMeasure a = SizeMeasure { getSizeMeasure :: Maybe (SizeMeasure1 a) }
+  deriving (Eq,Ord,Show,Read)
+
+instance (Num a, Ord a) => Monoid (SizeMeasure a) where
+  mempty = SizeMeasure Nothing
+  SizeMeasure a `mappend` SizeMeasure b = SizeMeasure $ maybeMappendBy (<>) a b
+
+
+
+sizeMeasure :: Num a => a -> SizeMeasure a
+sizeMeasure i = SizeMeasure $ Just $ sizeMeasure1 i
+
+
+
+data SizeMeasure1 a = SizeMeasure1
+    { size_sum      :: !a
+    , size_count    :: !Integer
+    , size_min      :: Min a
+    , size_max      :: Max a
+    }
+  deriving (Eq,Ord,Show,Read)
+
+
+instance (Num a, Ord a) => Semigroup (SizeMeasure1 a) where
+  a <> b = SizeMeasure1 { size_sum      = size_sum a + size_sum b
+                        , size_count    = size_count a + size_count b
+                        , size_min      = size_min a <> size_min b
+                        , size_max      = size_max a <> size_max b }
+
+
+sizeMeasure1 :: Num a => a -> SizeMeasure1 a
+sizeMeasure1 i = 
+    SizeMeasure1 { size_sum      = i
+                 , size_count    = 1
+                 , size_min      = Min i
+                 , size_max      = Max i }
 
 
