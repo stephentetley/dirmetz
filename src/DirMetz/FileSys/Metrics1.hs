@@ -32,7 +32,7 @@ import MetricsLib.Base
 
 
 import Language.KURE                    -- package: kure
-
+import Control.Newtype                  -- package: newtype
 import Data.Time                        -- package: time
 
 
@@ -45,7 +45,7 @@ import Data.Semigroup hiding ( (<>) )
 
 -- 
 fileSize1 :: TransformE FileObj (SizeMetric Integer)
-fileSize1 = swapMaybeT "empty Filesys" $ fmap ((fmap measure1ToMetric) . getSizeMeasure) $ crushtdT $
+fileSize1 = swapMaybeT "empty Filesys" $ fmap extractSizeMetricMb $ crushtdT $
     do File _ _ sz <- idR
        return $ sizeMeasure $ fromIntegral sz
 
@@ -76,7 +76,7 @@ calcLatestFile = runKureResultM . applyT latestFile1 zeroContext
 
 -- Latest monoid -- Maybe inside Latest becomes a failing strategy...
 latestFile1 :: TransformE FileObj UTCTime
-latestFile1 = swapMaybeT "empty Filesys" $ fmap getLatest $ crushtdT $ 
+latestFile1 = swapMaybeT "empty Filesys" $ fmap unpack $ crushtdT $ 
     do File _ props _ <- idR
        return $ Latest $ modification_time props
 
@@ -138,14 +138,16 @@ countFolders1 = fmap getSum go_kids
 calcMaxDepth :: FileObj -> Result Integer
 calcMaxDepth = runKureResultM . applyT maxDepth1 zeroContext
 
+
 maxDepth1 :: TransformE FileObj Integer
 maxDepth1 = fmap (fromIntegral . getMax) $ allT $ folder_depth <+ file_depth 
   where
     folder_depth = do Folder {} <- idR
                       mx <- allT $ folder_depth <+ file_depth
                       return $ 1 + mx
+
     file_depth = do File {} <- idR 
-                    return $ maxi (1::Integer)
+                    return $ Max (1::Integer)
 
 
 
