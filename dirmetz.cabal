@@ -35,13 +35,15 @@ library
                       case-insensitive,
                       parsec >= 3.1,
                       kure >= 2.16,
-                      newtype >= 0.2
+                      newtype >= 0.2,
+                      regex-compat >= 0.95
 
   exposed-modules:
     DirMetz.FileSys.Base,
     DirMetz.FileSys.DirRecurseParser,
     DirMetz.FileSys.Kure,
-    DirMetz.FileSys.Metrics1
+    DirMetz.FileSys.Metrics1,
+    DirMetz.FileSys.RegexGlob,
     MetricsLib.Base
     
 

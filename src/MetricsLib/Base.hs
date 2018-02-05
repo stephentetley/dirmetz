@@ -41,8 +41,10 @@ toResult :: Either String a -> Result a
 toResult (Left err) = Err err
 toResult (Right a)  = Ans a
 
+
 runKureResultM :: KureM a -> Result a
 runKureResultM = toResult . runKureM Right Left
+
 
 
 data Metric a = Metric
@@ -51,6 +53,7 @@ data Metric a = Metric
     , metric_result     :: Result a
     }
   deriving (Eq,Ord,Show)
+
 
 
 -- Uminho metrics use Strings and Read to hide the representation of metrics
@@ -68,51 +71,6 @@ type Maxi = Max Int64
 
 maxi :: Integral a => a -> Maxi
 maxi = Max . fromIntegral
-
-
-
-
-
--- Probably call MaxInteger LargestInteger.
--- There is scope for max-min Ints, doubles, dates...
-
-
-newtype LargestInteger = LargestInteger { getLargestInteger :: Max Integer }
-  deriving (Eq,Ord,Show,Read)
-
-instance Monoid LargestInteger where
-  mempty = LargestInteger (-1)
-  LargestInteger i1 `mappend` LargestInteger i2 = LargestInteger $ i1 <> i2
-
-
-instance Newtype LargestInteger (Max Integer) where
-  pack = LargestInteger
-  unpack = getLargestInteger
-
-
--- Note - LargestInteger limited, we really want a Monoid not a Semigroup
-
-
---
-newtype SmallestInteger = SmallestInteger { getSmallestInteger :: Min Integer }
-  deriving (Eq,Ord,Show,Read)
-
-
-instance Newtype SmallestInteger (Min Integer) where
-  pack = SmallestInteger
-  unpack = getSmallestInteger
-
-
-
--- Make a semigroup a monoid with a sentinel (-1).
---
-instance Monoid SmallestInteger where
-  mempty = SmallestInteger (-1) 
-  a@(SmallestInteger i1) `mappend` b@(SmallestInteger i2) 
-      | i1 < 0          = b     -- always go for b if a is the sentinel
-      | i2 < i1         = b
-      | otherwise       = a
-
 
 
 maybeMappendBy :: (a -> a -> a) -> Maybe a -> Maybe a -> Maybe a
@@ -141,6 +99,51 @@ positiveT errmsg ma  = transform $ \c a -> applyT ma c a >>= post
            | otherwise = fail errmsg
 
 
+
+
+
+-- Probably call MaxInteger LargestInteger.
+-- There is scope for max-min Ints, doubles, dates...
+
+
+newtype LargestInteger = LargestInteger { getLargestInteger :: Maybe Integer }
+  deriving (Eq,Ord,Show,Read)
+
+instance Monoid LargestInteger where
+  mempty = LargestInteger $ Nothing
+  LargestInteger i1 `mappend` LargestInteger i2 = LargestInteger $ maybeMappendBy max i1 i2
+
+
+instance Newtype LargestInteger (Maybe Integer) where
+  pack = LargestInteger
+  unpack = getLargestInteger
+
+
+
+
+--
+newtype SmallestInteger = SmallestInteger { getSmallestInteger :: Min Integer }
+  deriving (Eq,Ord,Show,Read)
+
+
+instance Newtype SmallestInteger (Min Integer) where
+  pack = SmallestInteger
+  unpack = getSmallestInteger
+
+
+
+-- Make a semigroup a monoid with a sentinel (-1).
+--
+instance Monoid SmallestInteger where
+  mempty = SmallestInteger (-1) 
+  a@(SmallestInteger i1) `mappend` b@(SmallestInteger i2) 
+      | i1 < 0          = b     -- always go for b if a is the sentinel
+      | i2 < i1         = b
+      | otherwise       = a
+
+
+
+
 newtype Latest = Latest { getLatest :: Maybe UTCTime }
   deriving (Eq,Ord,Show,Read)
 
@@ -162,9 +165,8 @@ newtype Earliest = Earliest { getEarliest :: Maybe UTCTime }
 
 instance Monoid Earliest where
   mempty = Earliest Nothing
-  Earliest a `mappend` Earliest b = Earliest $ maybeMappendBy fn a b
-    where
-      fn d1 d2 = if d1 >= d2 then d1 else d2
+  Earliest a `mappend` Earliest b = Earliest $ maybeMappendBy min a b
+
 
 instance Newtype Earliest (Maybe UTCTime) where
   pack = Earliest

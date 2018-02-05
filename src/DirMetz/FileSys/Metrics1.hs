@@ -4,6 +4,7 @@
 {-# LANGUAGE InstanceSigs               #-}
 {-# LANGUAGE LambdaCase                 #-}
 {-# LANGUAGE UndecidableInstances       #-}
+{-# LANGUAGE ScopedTypeVariables        #-}
 {-# OPTIONS -Wall #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
@@ -138,7 +139,9 @@ countFolders1 = fmap getSum go_kids
 calcMaxDepth :: FileObj -> Result Integer
 calcMaxDepth = runKureResultM . applyT maxDepth1 zeroContext
 
-
+-- allT needs to (implicitly) use the Max monoid, which needs
+-- Bounded on its number type.
+--
 maxDepth1 :: TransformE FileObj Integer
 maxDepth1 = fmap (fromIntegral . getMax) $ allT $ folder_depth <+ file_depth 
   where
@@ -147,7 +150,7 @@ maxDepth1 = fmap (fromIntegral . getMax) $ allT $ folder_depth <+ file_depth
                       return $ 1 + mx
 
     file_depth = do File {} <- idR 
-                    return $ Max (1::Integer)
+                    return $ maxi (1::Integer)
 
 
 

@@ -8,6 +8,7 @@ import DirMetz.FileSys.Base
 import DirMetz.FileSys.DirRecurseParser
 import DirMetz.FileSys.Kure hiding ( blankLine )
 import DirMetz.FileSys.Metrics1
+import DirMetz.FileSys.RegexGlob
 
 import MetricsLib.Base
 
@@ -56,13 +57,14 @@ demo06 = getCurrentDirectory >>= populate >>= \fo -> case subsystems fo of
 
 
 demo07 = readListing "./demo/data/dir-recurse.txt"
+demo08 = readListing "./demo/data/dir-recurse.txt"
 
 
 -- demo08 :: IO ()
 -- demo08 = getCurrentDirectory >>= populate >>= \fo -> putStrLn (display fo) 
 
-demo08 :: IO ()
-demo08 = getCurrentDirectory >>= populateFS >>= \fo ->  putStrLn (display fo) 
+demo09 :: IO ()
+demo09 = getCurrentDirectory >>= populateFS >>= \fo ->  putStrLn (display fo) 
 
 
 -- getModificationTime returns UTCTime 
@@ -96,3 +98,7 @@ temp07 = testP ((,) <$> dname <*> headers) $
   where
     dname = emptyLine *> emptyLine *> indented pDirectoryName
     headers = emptyLine *> emptyLine *> pHeaderLines
+
+
+temp08a = match1 "*.doc" "e:/documents/elephant.doc"
+temp08b = match1 "*.doc" "e:/documents/elephant.xls"
