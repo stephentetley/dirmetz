@@ -15,7 +15,8 @@ import MetricsLib.Base
 -- import Language.KURE                    -- package: kure
 
 import Data.Time
-import System.Directory
+import System.FilePath
+import System.Directory hiding (doesPathExist)
 
 
 --------------------------------------------------------------------------------
@@ -102,3 +103,5 @@ temp07 = testP ((,) <$> dname <*> headers) $
 
 temp08a = match1 "*.doc" "e:/documents/elephant.doc"
 temp08b = match1 "*.doc" "e:/documents/elephant.xls"
+
+temp09 = getCurrentDirectory >>= populateFS >>= \fo -> print (doesPathExist "dirmetz.cabal" fo) 

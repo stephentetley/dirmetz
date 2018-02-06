@@ -22,7 +22,7 @@ import qualified Data.CaseInsensitive   as CI            -- package: case-insens
 import Data.Time                        -- package: time
 
 import Control.Monad
-import Data.List ( foldl', sortBy )
+import Data.List
 import System.Directory
 import System.FilePath
 
@@ -35,7 +35,10 @@ type Name = String
 type Size = Integer
 
 -- Trees have a pendant which stores different information
-data FileStore = FileStore FilePath [FileObj]
+data FileStore = FileStore 
+    { absolute_path     :: FilePath 
+    , contents          :: [FileObj]
+    }
   deriving (Eq,Ord,Show)
 
 data FileObj = Folder Name Properties [FileObj]
@@ -133,7 +136,9 @@ populateProperties path = do
 
 display :: FileStore -> String
 display (FileStore path kids) = 
-    ($ "") $ foldl' (\ac fo -> ac . display1 fo) (showString path) (sortBy neutralOrd kids)
+    ($ "") $ foldl' (\ac fo -> ac . display1 fo) 
+                    (showString path) 
+                    (sortBy neutralOrd kids)
 
 
 display1 :: FileObj -> ShowS
@@ -141,9 +146,10 @@ display1 = step id ""
   where
     step ac path (File s _ _)    = ac `appendLine` (catPath path s)
 
-    step ac path (Folder s _ xs) = let path1 = catPath path s
-                                       ac1   = ac `appendLine` path1
-                                   in foldl' (\acc fo -> step acc path1 fo) ac1 (sortBy neutralOrd xs)
+    step ac path (Folder s _ xs) = 
+         let path1 = catPath path s
+             ac1   = ac `appendLine` path1
+         in foldl' (\acc fo -> step acc path1 fo) ac1 (sortBy neutralOrd xs)
 
 
 catPath :: String -> String -> String
@@ -153,3 +159,49 @@ catPath s1 s2 | null s1 = s2
 
 appendLine :: ShowS -> String -> ShowS
 appendLine f s = let s1 = ('\n':s) in f . showString s1
+
+--------------------------------------------------------------------------------
+-- Operations c.f. System.Directory
+
+
+-- | If not a qualified path search from root of filestore
+
+isPathPrefixOf :: FilePath -> FilePath -> Bool
+isPathPrefixOf pre body = go (splitPath pre) (splitPath body)
+  where
+    go []     _                     = True
+    go _      []                    = False     
+    go (x:xs) (y:ys) 
+       | normalise x == normalise y = go xs ys
+       | otherwise                  = False
+
+dropPathPrefix :: FilePath -> FilePath -> FilePath
+dropPathPrefix pre body = go (splitPath pre) (splitPath body)
+  where
+    go []     rest                  = normalise $ joinPath rest
+    go _      []                    = normalise ""
+    go (x:xs) rest@(y:ys) 
+       | normalise x == normalise y = go xs ys
+       | otherwise                  = normalise $ joinPath rest
+
+
+doesPathExist1 :: FilePath -> FileStore -> Bool
+doesPathExist1 path store = go (splitPath path) (contents store)
+  where
+    getNames        = map (normalise . nameOf)
+    go []     _     = False
+    go [x]    fs    = normalise x `elem` getNames fs
+    go (x:xs) fs    = 
+       let x1 = normalise x in case find (\a -> x1 == nameOf a) fs of
+           Just (Folder _ _ kids) -> go xs kids
+           _  -> False
+
+doesPathExist :: FilePath -> FileStore -> Bool
+doesPathExist path store
+    | not (hasDrive path)                       = doesPathExist1 path store
+    | isPathPrefixOf (absolute_path store) path = 
+        let suffix = dropPathPrefix (absolute_path store) path in doesPathExist1 suffix store
+        
+    | otherwise                                 = False
+
+
