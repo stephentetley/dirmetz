@@ -227,3 +227,43 @@ doesFolderExist path store = case findFileObj path store of
 
 
 
+listDirectory :: FilePath -> FileStore -> [FilePath]
+listDirectory path store = case findFileObj path store of
+    Just (Folder _ _ objs) -> map (\a -> path </> nameOf a) objs
+    _ -> []
+
+
+findFile :: [FilePath] -> String -> FileStore -> Maybe FilePath
+findFile dirs name store = outer dirs
+  where
+    outer []        = Nothing
+    outer (d:ds)    = case findFileObj d store of
+        Just (Folder _ _ objs) -> case inner objs of
+            Nothing -> outer ds
+            ans -> fmap (d </>) ans
+        _ -> outer ds
+
+    inner ((File n _ _):_) | n == name  = Just n
+    inner (_:xs)                        = inner xs
+    inner []                            = Nothing
+
+
+findFiles :: [FilePath] -> String -> FileStore -> [FilePath]
+findFiles dirs name store = concatMap outer dirs
+  where
+    outer dir = case findFileObj dir store of
+        Just (Folder _ _ objs) -> case inner objs of
+            Nothing -> []
+            Just file -> [dir </> file]
+        _ -> []
+
+    inner ((File n _ _):_) | n == name  = Just n
+    inner (_:xs)                        = inner xs
+    inner []                            = Nothing
+
+
+
+getFileSize :: FilePath -> FileStore -> Maybe Integer
+getFileSize path store = case findFileObj path store of
+    Just (File _ _ sz) -> Just sz
+    _ -> Nothing
