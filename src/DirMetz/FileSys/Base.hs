@@ -23,7 +23,8 @@ import Data.Time                        -- package: time
 
 import Control.Monad
 import Data.List
-import System.Directory
+import Data.Maybe
+import qualified System.Directory as BASE
 import System.FilePath
 
 
@@ -79,47 +80,52 @@ populateFS :: FilePath -> IO FileStore
 populateFS root = FileStore root <$> children root
   where
     listDirectoryLong :: FilePath -> IO [FilePath]
-    listDirectoryLong path = map (path </>) <$> listDirectory path
+    listDirectoryLong path = map (path </>) <$> BASE.listDirectory path
 
-    children path = do { kids  <- filterM doesDirectoryExist =<< listDirectoryLong path 
-                       ; kids' <- mapM folder1 kids
-                       ; files <- files1 path
-                       ; return $ kids' ++ files }
+    children path = 
+        do { kids  <- filterM BASE.doesDirectoryExist =<< listDirectoryLong path 
+           ; kids' <- mapM folder1 kids
+           ; files <- files1 path
+           ; return $ kids' ++ files }
 
-    folder1 path  = do { props <- populateProperties path
-                       ; kids  <- children path
-                       ; return $ Folder (takeFileName path) props kids }
+    folder1 path  = 
+        do { props <- populateProperties path
+           ; kids  <- children path
+           ; return $ Folder (takeFileName path) props kids }
                        
-    files1 path = do { xs <- filterM doesFileExist =<< listDirectoryLong path 
-                     ; forM xs (\x -> do { props <- populateProperties x
-                                         ; sz <- getFileSize x
-                                         ; return $ File (takeFileName x) props sz }) 
-                     }
+    files1 path = 
+        do { xs <- filterM BASE.doesFileExist =<< listDirectoryLong path 
+           ; forM xs (\x -> do { props <- populateProperties x
+                               ; sz <- BASE.getFileSize x
+                               ; return $ File (takeFileName x) props sz }) 
+           }
 
 
 populate :: FilePath -> IO FileObj
 populate = foldersR
   where
     listDirectoryLong :: FilePath -> IO [FilePath]
-    listDirectoryLong path = map (path </>) <$> listDirectory path
+    listDirectoryLong path = map (path </>) <$> BASE.listDirectory path
 
-    foldersR path = do { props <- populateProperties path
-                       ; kids  <- filterM doesDirectoryExist =<< listDirectoryLong path 
-                       ; kids' <- mapM foldersR kids
-                       ; files <- files1 path
-                       ; return $ Folder (takeFileName path) props (kids' ++ files) }
+    foldersR path = 
+        do { props <- populateProperties path
+           ; kids  <- filterM BASE.doesDirectoryExist =<< listDirectoryLong path 
+           ; kids' <- mapM foldersR kids
+           ; files <- files1 path
+           ; return $ Folder (takeFileName path) props (kids' ++ files) }
                        
-    files1 path = do { xs <- filterM doesFileExist =<< listDirectoryLong path 
-                     ; forM xs (\x -> do { props <- populateProperties x
-                                         ; sz <- getFileSize x
-                                         ; return $ File (takeFileName x) props sz }) 
-                     }
+    files1 path = 
+        do { xs <- filterM BASE.doesFileExist =<< listDirectoryLong path 
+           ; forM xs (\x -> do { props <- populateProperties x
+                               ; sz <- BASE.getFileSize x
+                               ; return $ File (takeFileName x) props sz }) 
+           }
 
 
 populateProperties :: FilePath -> IO Properties
 populateProperties path = do 
-    a <- getAccessTime path
-    m <- getModificationTime path
+    a <- BASE.getAccessTime path
+    m <- BASE.getModificationTime path
     return $ Properties { access_time = Just a
                         , modification_time = Just m
                         }
@@ -185,23 +191,39 @@ dropPathPrefix pre body = go (splitPath pre) (splitPath body)
        | otherwise                  = normalise $ joinPath rest
 
 
-doesPathExist1 :: FilePath -> FileStore -> Bool
-doesPathExist1 path store = go (splitPath path) (contents store)
+findFileObj1 :: FilePath -> FileStore -> Maybe FileObj
+findFileObj1 path store = go (splitPath path) (contents store)
   where
-    getNames        = map (normalise . nameOf)
-    go []     _     = False
-    go [x]    fs    = normalise x `elem` getNames fs
-    go (x:xs) fs    = 
-       let x1 = normalise x in case find (\a -> x1 == nameOf a) fs of
+    go []     _     = Nothing
+    go [x]    objs  = let x1 = normalise x in find (\a -> x1 == nameOf a) objs
+    go (x:xs) objs  = 
+       let x1 = normalise x in case find (\a -> x1 == nameOf a) objs of
            Just (Folder _ _ kids) -> go xs kids
-           _  -> False
+           _  -> Nothing
+
+
+findFileObj :: FilePath -> FileStore -> Maybe FileObj
+findFileObj path store              
+    | not (hasDrive path)                       = findFileObj1 path store
+    | isPathPrefixOf (absolute_path store) path = 
+        let suffix = dropPathPrefix (absolute_path store) path 
+        in findFileObj1 suffix store
+  
+    | otherwise                                 = Nothing
+
 
 doesPathExist :: FilePath -> FileStore -> Bool
-doesPathExist path store
-    | not (hasDrive path)                       = doesPathExist1 path store
-    | isPathPrefixOf (absolute_path store) path = 
-        let suffix = dropPathPrefix (absolute_path store) path in doesPathExist1 suffix store
-        
-    | otherwise                                 = False
+doesPathExist path store = isJust $ findFileObj path store             
+
+doesFileExist :: FilePath -> FileStore -> Bool
+doesFileExist path store = case findFileObj path store of
+    Just (File {}) -> True
+    _ -> False
+
+doesFolderExist :: FilePath -> FileStore -> Bool
+doesFolderExist path store = case findFileObj path store of
+    Just (Folder {}) -> True
+    _ -> False
+
 
 
