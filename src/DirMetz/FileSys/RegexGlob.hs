@@ -21,6 +21,7 @@
 
 module DirMetz.FileSys.RegexGlob where
 
+import DirMetz.FileSys.Base
 
 import Text.Regex                -- package: regex-compat
 
@@ -55,5 +56,41 @@ match1 patt input =
    let regex = mkRegex $ translate patt in isJust $ matchRegex regex input
 
 
-isPatt :: String -> Bool
-isPatt = any (`elem` "[*?")
+isPattern :: String -> Bool
+isPattern = any (`elem` "[*?")
+
+namesMatching :: String -> FileStore -> [String]
+namesMatching pat store
+    | not (isPattern pat) = 
+        if doesPathExist pat store then [pat] else []
+    | otherwise           = 
+        case splitFileName pat of
+            ("",baseName) -> listMatches "" baseName store
+            (dirName,baseName) -> error "TODO"
+                   
+
+listMatches :: FilePath -> String -> FileStore -> [String]
+listMatches dirName pat store = 
+    checkHiddens $ getDirectoryContents dirName store
+  where
+    -- dirName1 = if null dirName then "" else dirName
+    checkHiddens names
+        | isHidden pat = filter isHidden names
+        | otherwise    = filter (not . isHidden) names 
+                 
+
+isHidden :: String -> Bool
+isHidden ('.':_) = True
+isHidden _       = False
+
+listPlain :: FilePath -> String -> FileStore -> [String]
+listPlain dirName baseName store = 
+    if exists then [baseName] else []
+  where
+    exists = if null baseName 
+             then doesFolderExist dirName store
+             else doesPathExist (dirName </> baseName) store
+
+               
+          
+      

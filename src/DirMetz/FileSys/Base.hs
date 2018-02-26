@@ -267,3 +267,13 @@ getFileSize :: FilePath -> FileStore -> Maybe Integer
 getFileSize path store = case findFileObj path store of
     Just (File _ _ sz) -> Just sz
     _ -> Nothing
+
+
+getDirectoryContents :: FilePath -> FileStore -> [FilePath]
+getDirectoryContents = listDirectory
+
+-- Note - we could simulate IO signatures by having FileStore in 
+-- a reader monad, then we could have:
+--
+-- > getDirectoryContents :: FilePath -> FS [FilePath]
+
