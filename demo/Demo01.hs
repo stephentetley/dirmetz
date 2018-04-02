@@ -23,36 +23,36 @@ import System.Directory hiding (doesPathExist)
 -- Demos
 
 demo01 :: IO ()
-demo01 = getCurrentDirectory >>= populate >>= print
+demo01 = getCurrentDirectory >>= populateC >>= print
 
 demo02 :: IO ()
-demo02 = getCurrentDirectory >>= populate >>= \fo -> case prettyPrint fo of
+demo02 = getCurrentDirectory >>= populateC >>= \fo -> case prettyPrint fo of
     Right ans -> print ans
     Left err -> error err
 
 
 
 demo03 :: IO ()
-demo03 = getCurrentDirectory >>= populate >>= \fo -> case calcLargestFile fo of
+demo03 = getCurrentDirectory >>= populateC >>= \fo -> case calcLargestFile fo of
     Ans ans -> print ans
     Err err -> error err
 
 
 
 demo04 :: IO ()
-demo04 = getCurrentDirectory >>= populate >>= \fo -> case (calcCountFiles fo, calcCountFolders fo) of
+demo04 = getCurrentDirectory >>= populateC >>= \fo -> case (calcCountFiles fo, calcCountFolders fo) of
     (Ans i1, Ans i2) -> print $ (i1,i2)
     (Err err, _) -> error err
     (_, Err err) -> error err
 
 
 demo05 :: IO ()
-demo05 = getCurrentDirectory >>= populate >>= \fo -> case calcMaxDepth fo of
+demo05 = getCurrentDirectory >>= populateC >>= \fo -> case calcMaxDepth fo of
     Ans ans -> print ans
     Err err -> error err
 
 demo06 :: IO ()
-demo06 = getCurrentDirectory >>= populate >>= \fo -> case subsystems fo of
+demo06 = getCurrentDirectory >>= populateC >>= \fo -> case subsystems fo of
     Right ans -> print ans
     Left err -> error err
 
@@ -65,7 +65,7 @@ demo08 = readListing "./demo/data/dir-recurse.txt"
 -- demo08 = getCurrentDirectory >>= populate >>= \fo -> putStrLn (display fo) 
 
 demo09 :: IO ()
-demo09 = getCurrentDirectory >>= populateFS >>= \fo ->  putStrLn (display fo) 
+demo09 = getCurrentDirectory >>= readFromDisk >>= \fo ->  putStrLn (display fo) 
 
 
 -- getModificationTime returns UTCTime 
@@ -104,4 +104,4 @@ temp07 = testP ((,) <$> dname <*> headers) $
 temp08a = match1 "*.doc" "e:/documents/elephant.doc"
 temp08b = match1 "*.doc" "e:/documents/elephant.xls"
 
-temp09 = getCurrentDirectory >>= populateFS >>= \fo -> print (doesPathExist "dirmetz.cabal" fo) 
+temp09 = getCurrentDirectory >>= readFromDisk >>= \fo -> print (doesPathExist "dirmetz.cabal" fo) 

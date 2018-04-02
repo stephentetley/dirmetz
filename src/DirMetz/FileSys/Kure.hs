@@ -57,33 +57,33 @@ instance ExtendPath Context FilePath where
 
 
 -- Congruence combinator                     
-fileT :: Monad m => (Name -> Properties -> Size -> b) -> Transform c m FileObj b
+fileT :: Monad m => (Name -> Properties -> Size -> b) -> Transform c m Content b
 fileT f = contextfreeT $ \case
-    File s props sz -> return (f s props sz)
+    FsFile s props sz -> return (f s props sz)
     _         -> fail "not a File"
 
 -- congruence combinator
 -- Note Path is not propagated (this is a limitation that could be improved)
 folderT :: (ExtendPath c FilePath, Monad m) 
-        => Transform c m FileObj a -> (Name -> Properties -> [a] -> b) -> Transform c m FileObj b
+        => Transform c m Content a -> (Name -> Properties -> [a] -> b) -> Transform c m Content b
 folderT t f = transform $ \c -> \case
-    Folder s props ks -> let c1 = c @@ s in f s props <$> mapM (\fo -> applyT t c1 fo) ks
+    FsFolder s props ks -> let c1 = c @@ s in f s props <$> mapM (\fo -> applyT t c1 fo) ks
     _ -> fail "not a Folder"
                              
 
-folderAllR :: (ExtendPath c FilePath, Monad m) => Rewrite c m FileObj -> Rewrite c m FileObj
-folderAllR r = folderT r Folder
+folderAllR :: (ExtendPath c FilePath, Monad m) => Rewrite c m Content -> Rewrite c m Content
+folderAllR r = folderT r FsFolder
 
 
 
-instance (ExtendPath c FilePath) => Walker c FileObj where
-  allR :: MonadCatch m => Rewrite c m FileObj -> Rewrite c m FileObj
+instance (ExtendPath c FilePath) => Walker c Content where
+  allR :: MonadCatch m => Rewrite c m Content -> Rewrite c m Content
   allR r = prefixFailMsg "allR failed: " $
            rewrite $ \cx fo -> inject <$> applyR allRfileObj cx fo
     where
       allRfileObj = readerT $ \case 
-                      File {} -> idR
-                      Folder {} -> folderAllR (extractR r)
+                      FsFile {} -> idR
+                      FsFolder {} -> folderAllR (extractR r)
 
 
 
@@ -96,8 +96,8 @@ type TransformE a b = Transform Context KureM a b
 
 
 
-prettyPrint :: FileObj -> Either String Doc
-prettyPrint = fmap getLineDoc . runKureM Right Left . applyT prettyDir zeroContext
+prettyPrint :: Content -> Either String Doc
+prettyPrint = fmap getLineDoc . runKureM Right Left . applyT prettyFolder zeroContext
 
 newtype LineDoc = LineDoc { getLineDoc :: Doc }
 
@@ -105,12 +105,12 @@ blankLine :: LineDoc
 blankLine = LineDoc $ text ""
 
 -- Ideally KURE would have a one-level version of collectT 
-prettyDir :: TransformE FileObj LineDoc
-prettyDir = withPatFailMsg "addLitR failed" $
-            do (c, Folder s _ _) <- exposeT
+prettyFolder :: TransformE Content LineDoc
+prettyFolder = withPatFailMsg "addLitR failed" $
+            do (c, FsFolder s _ _) <- exposeT
                let d0 = LineDoc $ text (getContext c </> s) <> char ':'
                d1 <- allT pretty1
-               ds <- allT (mtryM prettyDir)
+               ds <- allT (mtryM prettyFolder)
                return $ d0 `mappend` d1 `mappend` ds `mappend` blankLine
 
 
@@ -126,7 +126,7 @@ vsep (d:ds)     = d $+$ vsep ds
 
 
 -- No descending into terms.
-pretty1 :: TransformE FileObj LineDoc
+pretty1 :: TransformE Content LineDoc
 pretty1 = transform $ \_ -> \case
-    File s _ _ -> return $ LineDoc $ nest 6 (text s)
-    Folder s _ _ -> return $ LineDoc $ text "<DIR>" <+> text s
+    FsFile s _ _ -> return $ LineDoc $ nest 6 (text s)
+    FsFolder s _ _ -> return $ LineDoc $ text "<DIR>" <+> text s

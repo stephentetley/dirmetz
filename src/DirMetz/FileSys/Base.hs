@@ -38,12 +38,12 @@ type Size = Integer
 -- Trees have a pendant which stores different information
 data FileStore = FileStore 
     { absolute_path     :: FilePath 
-    , contents          :: [FileObj]
+    , contents          :: [Content]
     }
   deriving (Eq,Ord,Show)
 
-data FileObj = Folder Name Properties [FileObj]
-             | File   Name Properties Size
+data Content = FsFolder Name Properties [Content]
+             | FsFile   Name Properties Size
   deriving (Eq,Ord,Show)
 
 -- Note - adding properties is onerous for dir listings. 
@@ -64,11 +64,11 @@ data Properties = Properties
 -- Other possible file stats are premissions...
 
 
-nameOf :: FileObj -> String
-nameOf (Folder s _ _)   = s
-nameOf (File s _ _)     = s
+nameOf :: Content -> String
+nameOf (FsFolder s _ _) = s
+nameOf (FsFile s _ _)   = s
 
-neutralOrd :: FileObj -> FileObj -> Ordering
+neutralOrd :: Content -> Content -> Ordering
 neutralOrd o1 o2 = CI.mk (nameOf o1) `compare` CI.mk (nameOf o2)
 
 
@@ -76,8 +76,8 @@ neutralOrd o1 o2 = CI.mk (nameOf o1) `compare` CI.mk (nameOf o2)
 --------------------------------------------------------------------------------
 -- Populate 
 
-populateFS :: FilePath -> IO FileStore
-populateFS root = FileStore root <$> children root
+readFromDisk :: FilePath -> IO FileStore
+readFromDisk root = FileStore root <$> children root
   where
     listDirectoryLong :: FilePath -> IO [FilePath]
     listDirectoryLong path = map (path </>) <$> BASE.listDirectory path
@@ -91,18 +91,18 @@ populateFS root = FileStore root <$> children root
     folder1 path  = 
         do { props <- populateProperties path
            ; kids  <- children path
-           ; return $ Folder (takeFileName path) props kids }
+           ; return $ FsFolder (takeFileName path) props kids }
                        
     files1 path = 
         do { xs <- filterM BASE.doesFileExist =<< listDirectoryLong path 
            ; forM xs (\x -> do { props <- populateProperties x
                                ; sz <- BASE.getFileSize x
-                               ; return $ File (takeFileName x) props sz }) 
+                               ; return $ FsFile (takeFileName x) props sz }) 
            }
 
 
-populate :: FilePath -> IO FileObj
-populate = foldersR
+populateC :: FilePath -> IO Content
+populateC = foldersR
   where
     listDirectoryLong :: FilePath -> IO [FilePath]
     listDirectoryLong path = map (path </>) <$> BASE.listDirectory path
@@ -112,13 +112,13 @@ populate = foldersR
            ; kids  <- filterM BASE.doesDirectoryExist =<< listDirectoryLong path 
            ; kids' <- mapM foldersR kids
            ; files <- files1 path
-           ; return $ Folder (takeFileName path) props (kids' ++ files) }
+           ; return $ FsFolder (takeFileName path) props (kids' ++ files) }
                        
     files1 path = 
         do { xs <- filterM BASE.doesFileExist =<< listDirectoryLong path 
            ; forM xs (\x -> do { props <- populateProperties x
                                ; sz <- BASE.getFileSize x
-                               ; return $ File (takeFileName x) props sz }) 
+                               ; return $ FsFile (takeFileName x) props sz }) 
            }
 
 
@@ -147,12 +147,12 @@ display (FileStore path kids) =
                     (sortBy neutralOrd kids)
 
 
-display1 :: FileObj -> ShowS
+display1 :: Content -> ShowS
 display1 = step id ""
   where
-    step ac path (File s _ _)    = ac `appendLine` (catPath path s)
+    step ac path (FsFile s _ _)    = ac `appendLine` (catPath path s)
 
-    step ac path (Folder s _ xs) = 
+    step ac path (FsFolder s _ xs) = 
          let path1 = catPath path s
              ac1   = ac `appendLine` path1
          in foldl' (\acc fo -> step acc path1 fo) ac1 (sortBy neutralOrd xs)
@@ -191,18 +191,18 @@ dropPathPrefix pre body = go (splitPath pre) (splitPath body)
        | otherwise                  = normalise $ joinPath rest
 
 
-findFileObj1 :: FilePath -> FileStore -> Maybe FileObj
+findFileObj1 :: FilePath -> FileStore -> Maybe Content
 findFileObj1 path store = go (splitPath path) (contents store)
   where
     go []     _     = Nothing
     go [x]    objs  = let x1 = normalise x in find (\a -> x1 == nameOf a) objs
     go (x:xs) objs  = 
        let x1 = normalise x in case find (\a -> x1 == nameOf a) objs of
-           Just (Folder _ _ kids) -> go xs kids
+           Just (FsFolder _ _ kids) -> go xs kids
            _  -> Nothing
 
 
-findFileObj :: FilePath -> FileStore -> Maybe FileObj
+findFileObj :: FilePath -> FileStore -> Maybe Content
 findFileObj path store              
     | not (hasDrive path)                       = findFileObj1 path store
     | isPathPrefixOf (absolute_path store) path = 
@@ -217,19 +217,19 @@ doesPathExist path store = isJust $ findFileObj path store
 
 doesFileExist :: FilePath -> FileStore -> Bool
 doesFileExist path store = case findFileObj path store of
-    Just (File {}) -> True
+    Just (FsFile {}) -> True
     _ -> False
 
 doesFolderExist :: FilePath -> FileStore -> Bool
 doesFolderExist path store = case findFileObj path store of
-    Just (Folder {}) -> True
+    Just (FsFolder {}) -> True
     _ -> False
 
 
 
 listDirectory :: FilePath -> FileStore -> [FilePath]
 listDirectory path store = case findFileObj path store of
-    Just (Folder _ _ objs) -> map (\a -> path </> nameOf a) objs
+    Just (FsFolder _ _ objs) -> map (\a -> path </> nameOf a) objs
     _ -> []
 
 
@@ -238,34 +238,34 @@ findFile dirs name store = outer dirs
   where
     outer []        = Nothing
     outer (d:ds)    = case findFileObj d store of
-        Just (Folder _ _ objs) -> case inner objs of
+        Just (FsFolder _ _ objs) -> case inner objs of
             Nothing -> outer ds
             ans -> fmap (d </>) ans
         _ -> outer ds
 
-    inner ((File n _ _):_) | n == name  = Just n
-    inner (_:xs)                        = inner xs
-    inner []                            = Nothing
+    inner ((FsFile n _ _):_) | n == name  = Just n
+    inner (_:xs)                          = inner xs
+    inner []                              = Nothing
 
 
 findFiles :: [FilePath] -> String -> FileStore -> [FilePath]
 findFiles dirs name store = concatMap outer dirs
   where
     outer dir = case findFileObj dir store of
-        Just (Folder _ _ objs) -> case inner objs of
+        Just (FsFolder _ _ objs) -> case inner objs of
             Nothing -> []
             Just file -> [dir </> file]
         _ -> []
 
-    inner ((File n _ _):_) | n == name  = Just n
-    inner (_:xs)                        = inner xs
-    inner []                            = Nothing
+    inner ((FsFile n _ _):_) | n == name  = Just n
+    inner (_:xs)                          = inner xs
+    inner []                              = Nothing
 
 
 
 getFileSize :: FilePath -> FileStore -> Maybe Integer
 getFileSize path store = case findFileObj path store of
-    Just (File _ _ sz) -> Just sz
+    Just (FsFile _ _ sz) -> Just sz
     _ -> Nothing
 
 

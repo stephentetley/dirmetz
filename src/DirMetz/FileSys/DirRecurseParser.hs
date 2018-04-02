@@ -49,7 +49,7 @@ testIOP p path = fmap (first show) $ parseFromFile p path
 -- Use a notational convention - Directories are not "filled" until 
 -- post-processing after parsing, hence use another name.
 -- 
-type Element = FileObj
+type Element = Content
 
 data Block = Block Name [Element]
   deriving (Show)
@@ -112,10 +112,10 @@ pHeaderLines = titles *> underlines
 pElement :: Parser Element
 pElement = pMode >>= elementK
   where
-    elementK mode | isDir mode  = (\props name -> Folder name props [])
+    elementK mode | isDir mode  = (\props name -> FsFolder name props [])
                                     <$> pLastWriteTime <*> pName
     
-    elementK _                  = (\props size name -> File name props size)
+    elementK _                  = (\props size name -> FsFile name props size)
                                     <$> pLastWriteTime <*> pSize <*> pName
 
 pBlock :: Parser Block
@@ -132,7 +132,7 @@ pListing = twice emptyLine *> many1 pBlock
 -- Problem - output of dir -recurse seems to be in "UCS-2 LE BOM"
 -- and not UTF8, this is causing horrible errors...
 --
-readListing :: FilePath -> IO (Either String FileObj)
+readListing :: FilePath -> IO (Either String Content)
 readListing path = do 
     ans <- parseFromFile pListing path
     return $ case ans of 
@@ -218,7 +218,7 @@ isDir _         = False
 -- Build from flat.
 
 
-buildTopDown :: Listing -> Maybe FileObj
+buildTopDown :: Listing -> Maybe Content
 buildTopDown listing = fmap build1 $ getRoot listing
   where
     root_props = Properties { access_time = Nothing
@@ -228,7 +228,7 @@ buildTopDown listing = fmap build1 $ getRoot listing
     --
     build1 (Block name es) = let level1_kids = makeLevel1Kids listing
                                  kids = map (makeRecur level1_kids name) es
-                             in Folder name root_props kids
+                             in FsFolder name root_props kids
 
 -- | Root is always first
 getRoot :: Listing -> Maybe Block
@@ -236,16 +236,16 @@ getRoot (x:_) = Just x
 getRoot []    = Nothing
 
 
-makeRecur :: Level1Kids -> Name -> Element -> FileObj
-makeRecur _     _       obj@(File {})             = obj
-makeRecur store parent      (Folder name2 props _) = 
+makeRecur :: Level1Kids -> Name -> Element -> Content
+makeRecur _     _       obj@(FsFile {})               = obj
+makeRecur store parent      (FsFolder name2 props _)  = 
    let fullname = parent ++ ('\\':name2)
        kids1    = MAP.findWithDefault [] fullname store
        kids2    = map (makeRecur store fullname) kids1
-   in Folder name2 props kids2
+   in FsFolder name2 props kids2
 
 
-type Level1Kids = MAP.Map Name [FileObj]
+type Level1Kids = MAP.Map Name [Content]
 
 makeLevel1Kids :: Listing -> Level1Kids
 makeLevel1Kids = foldr step MAP.empty
