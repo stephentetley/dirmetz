@@ -38,64 +38,60 @@ import Data.Time                        -- package: time
 
 
 
-import qualified Data.Map as Map
+-- import qualified Data.Map as Map
 import Data.Semigroup hiding ( (<>) )
 
 
-
-
--- 
-fileSize1 :: TransformE Content (SizeMetric Integer)
-fileSize1 = swapMaybeT "empty Filesys" $ fmap extractSizeMetricMb $ crushtdT $
-    do FsFile _ _ sz <- idR
-       return $ sizeMeasure $ fromIntegral sz
 
 
 
 -- cf SDF Metz 
 -- a calc__ function to run the traversal and return 
 calcLargestFile :: FileStore -> Result Integer
-calcLargestFile = runKureResultM . applyT largestFile1 zeroContext . inject
+calcLargestFile = runKureResultM . applyT largestFileU zeroContext . inject
 
 
 
 
 -- max monoid
-largestFile1 :: TransformE U Integer
-largestFile1 = positiveT "empty Filesys" $ fmap (fromIntegral . getMax) $ crushtdT $ largestFileU
+largestFileU :: TransformE U Integer
+largestFileU = 
+    positiveT "empty Filesys" $ fmap (fromIntegral . getMax) $ crushtdT $ promoteT largestFileC
+  where
+    largestFileC :: TransformE Content Maxi
+    largestFileC = 
+        do FsFile _ _ sz <- idR
+           return $ maxi sz
 
-
-largestFileU :: TransformE U Maxi
-largestFileU = promoteT largestFileT
-
-largestFileT :: TransformE Content Maxi
-largestFileT = 
-    do FsFile _ _ sz <- idR
-       return $ maxi sz
 
 -- Latest file
-
-
-calcLatestFile :: Content -> Result UTCTime
-calcLatestFile = runKureResultM . applyT latestFile1 zeroContext
+calcLatestFile :: FileStore -> Result UTCTime
+calcLatestFile = runKureResultM . applyT latestFileU zeroContext . inject
   
 
 
 -- Latest monoid -- Maybe inside Latest becomes a failing strategy...
-latestFile1 :: TransformE Content UTCTime
-latestFile1 = swapMaybeT "empty Filesys" $ fmap unpack $ crushtdT $ 
-    do FsFile _ props _ <- idR
-       return $ Latest $ modification_time props
+latestFileU :: TransformE U UTCTime
+latestFileU = swapMaybeT "empty Filesys" $ fmap unpack $ crushtdT $ promoteT latestFileC
+  where
+    latestFileC :: TransformE Content Latest
+    latestFileC = 
+        do FsFile _ props _ <- idR
+           return $ Latest $ modification_time props
 
 
 
-calcEarliestFile :: Content -> Result UTCTime
-calcEarliestFile = runKureResultM . applyT earliestFile1 zeroContext
+calcEarliestFile :: FileStore -> Result UTCTime
+calcEarliestFile = runKureResultM . applyT earliestFileU zeroContext . inject
 
-earliestFile1 :: TransformE Content UTCTime
-earliestFile1 = swapMaybeT "empty Filesys" $ fmap getEarliest $ crushtdT $ 
-    do FsFile _ props _ <- idR
-       return $ Earliest $ modification_time props
+earliestFileU :: TransformE U UTCTime
+earliestFileU = 
+    swapMaybeT "empty Filesys" $ fmap getEarliest $ crushtdT $ promoteT earliestFileC
+  where
+    earliestFileC :: TransformE Content Earliest
+    earliestFileC = 
+        do FsFile _ props _ <- idR
+           return $ Earliest $ modification_time props
 
 
 
@@ -108,34 +104,34 @@ earliestFile1 = swapMaybeT "empty Filesys" $ fmap getEarliest $ crushtdT $
 
 
 
-calcCountFiles :: Content -> Result Integer
-calcCountFiles = runKureResultM . applyT countFiles1 zeroContext
+calcCountFiles :: FileStore -> Result Integer
+calcCountFiles = runKureResultM . applyT countFilesU zeroContext . inject
+  where
+    countFilesU :: TransformE U Integer
+    countFilesU = fmap getSum $ crushtdT $ promoteT countFilesC
 
 
 -- sum monoid
-countFiles1 :: TransformE Content Integer
-countFiles1 = fmap getSum $ crushtdT $ 
+countFilesC :: TransformE Content (Sum Integer)
+countFilesC = 
     do FsFile {} <- idR
        return 1
 
 
-
-calcCountFolders :: Content -> Result Integer
-calcCountFolders = runKureResultM . applyT countFolders1 zeroContext
-
-
--- Note - don't count the root folder (so don't use crushtdT)
+-- Note - we shouldn't count the root folder (to check...)
 --
--- Design note - this is implemented with a recursion that we 
--- could just as easily do without using strategies, can we do it better?
---
-countFolders1 :: TransformE Content Integer
-countFolders1 = fmap getSum go_kids
+calcCountFolders :: FileStore -> Result Integer
+calcCountFolders = runKureResultM . applyT countFoldersU zeroContext . inject
   where
-    go_kids   = allT $ tryM 0 go_folder
-    go_folder = do FsFolder {} <- idR
-                   i <- go_kids
-                   return $ 1 `mappend` i
+    countFoldersU :: TransformE U Integer
+    countFoldersU = fmap getSum $ crushtdT $ promoteT countFoldersC
+
+
+
+countFoldersC :: TransformE Content (Sum Integer)
+countFoldersC = 
+    do FsFolder {} <- idR
+       return 1
 
 
 -- deepest 
@@ -160,6 +156,7 @@ maxDepth1 = fmap (fromIntegral . getMax) $ allT $ folder_depth <+ file_depth
 
 
 
+{-
 
 -- Histogram
 -- Design issue - histograms are more "queries" than "metrics".
@@ -173,6 +170,8 @@ subsystems1 :: TransformE Content Histo
 subsystems1 = fmap Map.fromList $ allT $ tryM [] go_folder
   where
     go_folder = do FsFolder s _ _ <- idR
-                   i <- countFiles1
-                   j <- countFolders1
+                   i <- countFilesC
+                   j <- countFoldersC
                    return [(s,i+j)]
+
+-}

@@ -23,7 +23,7 @@ import System.Directory hiding (doesPathExist)
 -- Demos
 
 demo01 :: IO ()
-demo01 = getCurrentDirectory >>= populateC >>= print
+demo01 = getCurrentDirectory >>= readFromDisk >>= print
 
 demo02 :: IO ()
 demo02 = getCurrentDirectory >>= populateC >>= \fo -> case prettyPrint fo of
@@ -40,10 +40,15 @@ demo03 = getCurrentDirectory >>= readFromDisk >>= \fs -> case calcLargestFile fs
 
 
 demo04 :: IO ()
-demo04 = getCurrentDirectory >>= populateC >>= \fo -> case (calcCountFiles fo, calcCountFolders fo) of
+demo04 = getCurrentDirectory >>= readFromDisk >>= \fs -> case (calcCountFiles fs, calcCountFolders fs) of
     (Ans i1, Ans i2) -> print $ (i1,i2)
     (Err err, _) -> error err
     (_, Err err) -> error err
+
+demo04a :: IO ()
+demo04a = getCurrentDirectory >>= readFromDisk >>= \fs -> case calcCountFiles fs of
+    Ans i1 -> print $ i1
+    Err err -> error err
 
 
 demo05 :: IO ()
@@ -51,11 +56,13 @@ demo05 = getCurrentDirectory >>= populateC >>= \fo -> case calcMaxDepth fo of
     Ans ans -> print ans
     Err err -> error err
 
+
+{-
 demo06 :: IO ()
 demo06 = getCurrentDirectory >>= populateC >>= \fo -> case subsystems fo of
     Right ans -> print ans
     Left err -> error err
-
+-}
 
 demo07 = readListing "./demo/data/dir-recurse.txt"
 demo08 = readListing "./demo/data/dir-recurse.txt"
