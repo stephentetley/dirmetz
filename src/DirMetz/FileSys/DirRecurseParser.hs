@@ -49,7 +49,19 @@ testIOP p path = fmap (first show) $ parseFromFile p path
 -- Use a notational convention - Directories are not "filled" until 
 -- post-processing after parsing, hence use another name.
 -- 
+
+-- TODO should have a distinct syntax where Element/Folders are 
+-- not recursive
+
 type Element = Content
+type Mode = String
+
+{-
+-- TODO
+data Element_ = WinFile   Mode UTCTime Size Name
+              | WinFolder Mode UTCTime Name 
+
+-}
 
 data Block = Block Name [Element]
   deriving (Show)

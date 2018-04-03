@@ -33,7 +33,7 @@ demo02 = getCurrentDirectory >>= populateC >>= \fo -> case prettyPrint fo of
 
 
 demo03 :: IO ()
-demo03 = getCurrentDirectory >>= populateC >>= \fo -> case calcLargestFile fo of
+demo03 = getCurrentDirectory >>= readFromDisk >>= \fs -> case calcLargestFile fs of
     Ans ans -> print ans
     Err err -> error err
 

@@ -45,6 +45,21 @@ import System.FilePath
 -- attributes in attribute grammars, (parent) path would be an 
 -- obvious context.
 
+data U = UFS FileStore | UC Content
+
+instance Injection FileStore U where
+  inject = UFS
+  project (UFS fs)  = Just fs
+  project _         = Nothing
+
+instance Injection Content U where
+  inject = UC
+  project (UC c)    = Just c
+  project _         = Nothing
+
+
+
+
 newtype Context = Context { getContext :: FilePath }
 
 zeroContext :: Context
@@ -54,6 +69,14 @@ instance ExtendPath Context FilePath where
   (@@) (Context p1) p2 = Context $ p1 </> p2
 
 
+-- Congruence combinator                     
+fileStoreT :: Monad m 
+           => Transform c m Content a -> (FilePath -> [a] -> b) -> Transform c m FileStore b
+fileStoreT t f = transform $ \c -> \case
+    FileStore path ks -> f path <$> mapM (\fo -> applyT t c fo) ks
+              
+fileStoreAllR :: (ExtendPath c FilePath, Monad m) => Rewrite c m Content -> Rewrite c m FileStore
+fileStoreAllR r = fileStoreT r FileStore
 
 
 -- Congruence combinator                     
@@ -82,6 +105,19 @@ instance (ExtendPath c FilePath) => Walker c Content where
            rewrite $ \cx fo -> inject <$> applyR allRfileObj cx fo
     where
       allRfileObj = readerT $ \case 
+                      FsFile {} -> idR
+                      FsFolder {} -> folderAllR (extractR r)
+
+
+instance ExtendPath c FilePath => Walker c U where
+  allR :: MonadCatch m => Rewrite c m U -> Rewrite c m U
+  allR r = prefixFailMsg "allR failed: " $
+           rewrite $ \c -> \case 
+             UFS o -> UFS <$> applyR allFileStore c o
+             UC o  -> UC  <$> applyR allContent c o
+    where
+      allFileStore = readerT $ \_ -> fileStoreAllR (extractR r)
+      allContent   = readerT $ \case 
                       FsFile {} -> idR
                       FsFolder {} -> folderAllR (extractR r)
 

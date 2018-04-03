@@ -54,18 +54,24 @@ fileSize1 = swapMaybeT "empty Filesys" $ fmap extractSizeMetricMb $ crushtdT $
 
 -- cf SDF Metz 
 -- a calc__ function to run the traversal and return 
-calcLargestFile :: Content -> Result Integer
-calcLargestFile = runKureResultM . applyT largestFile1 zeroContext
+calcLargestFile :: FileStore -> Result Integer
+calcLargestFile = runKureResultM . applyT largestFile1 zeroContext . inject
 
 
 
 
 -- max monoid
-largestFile1 :: TransformE Content Integer
-largestFile1 = positiveT "empty Filesys" $ fmap (fromIntegral . getMax) $ crushtdT $ 
+largestFile1 :: TransformE U Integer
+largestFile1 = positiveT "empty Filesys" $ fmap (fromIntegral . getMax) $ crushtdT $ largestFileU
+
+
+largestFileU :: TransformE U Maxi
+largestFileU = promoteT largestFileT
+
+largestFileT :: TransformE Content Maxi
+largestFileT = 
     do FsFile _ _ sz <- idR
        return $ maxi sz
-
 
 -- Latest file
 
