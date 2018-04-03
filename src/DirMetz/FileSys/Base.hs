@@ -100,7 +100,7 @@ readFromDisk root = FileStore root <$> children root
                                ; return $ FsFile (takeFileName x) props sz }) 
            }
 
-
+{-
 populateC :: FilePath -> IO Content
 populateC = foldersR
   where
@@ -120,6 +120,8 @@ populateC = foldersR
                                ; sz <- BASE.getFileSize x
                                ; return $ FsFile (takeFileName x) props sz }) 
            }
+
+-}
 
 
 populateProperties :: FilePath -> IO Properties

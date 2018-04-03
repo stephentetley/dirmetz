@@ -132,22 +132,46 @@ type TransformE a b = Transform Context KureM a b
 
 
 
-prettyPrint :: Content -> Either String Doc
-prettyPrint = fmap getLineDoc . runKureM Right Left . applyT prettyFolder zeroContext
+prettyPrint :: FileStore -> Either String Doc
+prettyPrint = 
+    runKureM Right Left . applyT prettyU zeroContext . inject
+  where
+    prettyU :: TransformE U Doc
+    prettyU = fmap getLineDoc $ 
+        do d1 <- promoteT prettyFileStore
+           ds <- crushtdT $ promoteT prettyContents
+           return $ d1 `mappend` ds
 
 newtype LineDoc = LineDoc { getLineDoc :: Doc }
 
 blankLine :: LineDoc 
 blankLine = LineDoc $ text ""
 
+
+-- TODO currently broken...
+prettyFileStore :: TransformE FileStore LineDoc
+prettyFileStore = withPatFailMsg "prettyFileStore failed" $
+    do (FileStore path _) <- idR 
+       let d1 = LineDoc $ text path <> char '\\'
+       return $ d1
+
+prettyContents :: TransformE Content LineDoc
+prettyContents = prettyFile <+ prettyFolder
+
+
+prettyFile :: TransformE Content LineDoc
+prettyFile = withPatFailMsg "prettyFile failed" $
+    do (c, FsFile s _ _) <- exposeT
+       return $ LineDoc $ text (getContext c </> s)
+               
+
 -- Ideally KURE would have a one-level version of collectT 
 prettyFolder :: TransformE Content LineDoc
-prettyFolder = withPatFailMsg "addLitR failed" $
-            do (c, FsFolder s _ _) <- exposeT
-               let d0 = LineDoc $ text (getContext c </> s) <> char ':'
-               d1 <- allT pretty1
-               ds <- allT (mtryM prettyFolder)
-               return $ d0 `mappend` d1 `mappend` ds `mappend` blankLine
+prettyFolder = withPatFailMsg "prettyFolder failed" $
+    do (c, FsFolder s _ _) <- exposeT
+       let d1 = LineDoc $ text (getContext c </> s) <> char '\\'
+       ds <- allT prettyContents
+       return $ d1 `mappend` ds `mappend` blankLine
 
 
 instance Monoid LineDoc where

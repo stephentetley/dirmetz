@@ -138,21 +138,25 @@ countFoldersC =
 -- deepest is not a straight-forward topdown traversal
 
 
-calcMaxDepth :: Content -> Result Integer
-calcMaxDepth = runKureResultM . applyT maxDepth1 zeroContext
+calcMaxDepth :: FileStore -> Result Integer
+calcMaxDepth = runKureResultM . applyT maxDepth1 zeroContext . inject
 
 -- allT needs to (implicitly) use the Max monoid, which needs
 -- Bounded on its number type.
 --
-maxDepth1 :: TransformE Content Integer
-maxDepth1 = fmap (fromIntegral . getMax) $ allT $ folder_depth <+ file_depth 
+maxDepth1 :: TransformE U Integer
+maxDepth1 = fmap (fromIntegral . getMax) $ allT $ promoteT (folderDepth <+ fileDepth)
   where
-    folder_depth = do FsFolder {} <- idR
-                      mx <- allT $ folder_depth <+ file_depth
-                      return $ 1 + mx
+    folderDepth :: TransformE Content Maxi
+    folderDepth = 
+        do FsFolder {} <- idR
+           mx <- allT $ folderDepth <+ fileDepth
+           return $ 1 + mx
 
-    file_depth = do FsFile {} <- idR 
-                    return $ maxi (1::Integer)
+    fileDepth :: TransformE Content Maxi
+    fileDepth = 
+        do FsFile {} <- idR 
+           return $ maxi (1::Integer)
 
 
 

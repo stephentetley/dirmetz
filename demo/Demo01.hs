@@ -26,7 +26,7 @@ demo01 :: IO ()
 demo01 = getCurrentDirectory >>= readFromDisk >>= print
 
 demo02 :: IO ()
-demo02 = getCurrentDirectory >>= populateC >>= \fo -> case prettyPrint fo of
+demo02 = getCurrentDirectory >>= readFromDisk >>= \fo -> case prettyPrint fo of
     Right ans -> print ans
     Left err -> error err
 
@@ -52,7 +52,7 @@ demo04a = getCurrentDirectory >>= readFromDisk >>= \fs -> case calcCountFiles fs
 
 
 demo05 :: IO ()
-demo05 = getCurrentDirectory >>= populateC >>= \fo -> case calcMaxDepth fo of
+demo05 = getCurrentDirectory >>= readFromDisk >>= \fs -> case calcMaxDepth fs of
     Ans ans -> print ans
     Err err -> error err
 
